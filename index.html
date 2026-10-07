@@ -1788,7 +1788,131 @@ function mostrarDashboard() {
 
 
     document.body.appendChild(script);
+function callbackDashboard(data) {
 
+    if (!data.success) {
+
+        document.getElementById("totalAsociados")
+            .innerText = "—";
+
+        document.getElementById("totalEvaluaciones")
+            .innerText = "—";
+
+        document.getElementById("promedioGeneral")
+            .innerText = "—";
+
+        document.getElementById("satisfactorioSuperior")
+            .innerText = "—";
+
+        return;
+    }
+
+
+    const evaluaciones =
+        data.evaluaciones || [];
+
+
+    /* ================================
+       TOTAL DE EVALUACIONES
+    ================================= */
+
+    const totalEvaluaciones =
+        evaluaciones.length;
+
+
+    document.getElementById("totalEvaluaciones")
+        .innerText = totalEvaluaciones;
+
+
+    /* ================================
+       ASOCIADOS EVALUADOS
+    ================================= */
+
+    const asociados =
+        new Set(
+            evaluaciones
+                .map(e => e.asociado)
+                .filter(a => a)
+        );
+
+
+    document.getElementById("totalAsociados")
+        .innerText = asociados.size;
+
+
+    /* ================================
+       PROMEDIO GENERAL
+    ================================= */
+
+    let sumaPuntajes = 0;
+
+    evaluaciones.forEach(e => {
+
+        let puntaje =
+            Number(e.puntaje);
+
+        if (!isNaN(puntaje)) {
+
+            if (puntaje > 1) {
+                puntaje = puntaje / 100;
+            }
+
+            sumaPuntajes += puntaje;
+        }
+
+    });
+
+
+    const promedio =
+        totalEvaluaciones > 0
+            ? sumaPuntajes / totalEvaluaciones
+            : 0;
+
+
+    document.getElementById("promedioGeneral")
+        .innerText =
+        Math.round(promedio * 100) + "%";
+
+
+    /* ================================
+       SATISFACTORIO O SUPERIOR
+    ================================= */
+
+    let satisfactorios = 0;
+
+
+    evaluaciones.forEach(e => {
+
+        const puntaje =
+            Number(e.puntaje);
+
+        if (!isNaN(puntaje)) {
+
+            const porcentaje =
+                puntaje <= 1
+                    ? puntaje * 100
+                    : puntaje;
+
+            if (porcentaje >= 80) {
+                satisfactorios++;
+            }
+
+        }
+
+    });
+
+
+    const porcentajeSatisfactorio =
+        totalEvaluaciones > 0
+            ? (satisfactorios / totalEvaluaciones) * 100
+            : 0;
+
+
+    document.getElementById("satisfactorioSuperior")
+        .innerText =
+        Math.round(porcentajeSatisfactorio) + "%";
+
+}
 }
 function mostrarHistorial() {
 
