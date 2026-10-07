@@ -1470,6 +1470,159 @@ let incorrectas = 0;
 let datosEvaluacion = {};
 
 
+/* =========================================
+   CONVERTIR PUNTAJE
+========================================= */
+
+function convertirPuntaje(valor) {
+
+    if (
+        valor === null ||
+        valor === undefined ||
+        valor === ""
+    ) {
+
+        return NaN;
+
+    }
+
+
+    let texto =
+        String(valor)
+            .trim()
+            .replace("%", "")
+            .replace(",", ".");
+
+
+    let puntaje =
+        Number(texto);
+
+
+    if (isNaN(puntaje)) {
+
+        return NaN;
+
+    }
+
+
+    /*
+       Google Sheets puede devolver
+       un porcentaje como decimal.
+
+       Ejemplo:
+
+       60% → 0.6
+
+       En ese caso lo convertimos
+       a 60.
+    */
+
+    if (
+        puntaje > 0 &&
+        puntaje <= 1
+    ) {
+
+        puntaje =
+            puntaje * 100;
+
+    }
+
+
+    return puntaje;
+
+}
+
+
+/* =========================================
+   VALIDAR EVALUACIÓN
+========================================= */
+
+function esEvaluacionValida(e) {
+
+    if (!e) {
+
+        return false;
+
+    }
+
+
+    const asociado =
+        String(
+            e.asociado || ""
+        )
+        .trim()
+        .toLowerCase();
+
+
+    const local =
+        String(
+            e.local || ""
+        )
+        .trim()
+        .toLowerCase();
+
+
+    const puesto =
+        String(
+            e.puesto || ""
+        )
+        .trim()
+        .toLowerCase();
+
+
+    const evaluador =
+        String(
+            e.evaluador || ""
+        )
+        .trim()
+        .toLowerCase();
+
+
+    /*
+       Evitamos que filas antiguas,
+       encabezados o datos de prueba
+       sean considerados evaluaciones.
+    */
+
+    const valoresInvalidos = [
+        "asociado",
+        "local",
+        "puesto",
+        "evaluador",
+        "categoría",
+        "categoria",
+        "fecha"
+    ];
+
+
+    if (
+        valoresInvalidos.includes(asociado) ||
+        valoresInvalidos.includes(local) ||
+        valoresInvalidos.includes(puesto) ||
+        valoresInvalidos.includes(evaluador)
+    ) {
+
+        return false;
+
+    }
+
+
+    if (
+        !e.asociado ||
+        !e.local ||
+        !e.puntaje
+    ) {
+
+        return false;
+
+    }
+
+
+    return true;
+
+}
+
+
 
 /* =========================================
    CARGAR PREGUNTAS
@@ -2372,8 +2525,14 @@ function callbackDashboard(data) {
     }
 
 
+    /*
+       Filtramos registros inválidos
+       antes de hacer cualquier cálculo.
+    */
+
     const evaluaciones =
-        data.evaluaciones || [];
+        (data.evaluaciones || [])
+            .filter(esEvaluacionValida);
 
 
     /* ================================
@@ -2424,21 +2583,15 @@ function callbackDashboard(data) {
 
     let sumaPuntajes = 0;
 
+    let evaluacionesConPuntaje = 0;
+
 
     evaluaciones.forEach(e => {
 
 
-        let puntaje =
-            Number(
-
-                String(
-                    e.puntaje
-                )
-                .replace(
-                    "%",
-                    ""
-                )
-
+        const puntaje =
+            convertirPuntaje(
+                e.puntaje
             );
 
 
@@ -2447,16 +2600,18 @@ function callbackDashboard(data) {
             sumaPuntajes +=
                 puntaje;
 
+            evaluacionesConPuntaje++;
+
         }
 
     });
 
 
     const promedio =
-        totalEvaluaciones > 0
+        evaluacionesConPuntaje > 0
 
             ? sumaPuntajes /
-              totalEvaluaciones
+              evaluacionesConPuntaje
 
             : 0;
 
@@ -2482,16 +2637,8 @@ function callbackDashboard(data) {
 
 
         const puntaje =
-            Number(
-
-                String(
-                    e.puntaje
-                )
-                .replace(
-                    "%",
-                    ""
-                )
-
+            convertirPuntaje(
+                e.puntaje
             );
 
 
@@ -2527,274 +2674,433 @@ function callbackDashboard(data) {
         Math.round(
             porcentajeSatisfactorio
         ) + "%";
-/* =========================================
-   RESULTADOS POR LOCAL
-========================================= */
-
-const locales = {};
-
-evaluaciones.forEach(e => {
-
-    const local = e.local || "Sin local";
-
-    if (!locales[local]) {
-
-        locales[local] = {
-            evaluaciones: 0,
-            sumaPuntajes: 0,
-            satisfactorias: 0
-        };
-
-    }
-
-    let puntaje =
-        Number(
-            String(e.puntaje)
-                .replace("%", "")
-        );
-
-    if (isNaN(puntaje)) {
-        puntaje = 0;
-    }
-
-    locales[local].evaluaciones++;
-
-    locales[local].sumaPuntajes +=
-        puntaje;
-
-    if (puntaje >= 80) {
-
-        locales[local].satisfactorias++;
-
-    }
-
-});
 
 
-let htmlLocales = `
 
-    <table class="history-table">
+    /* =========================================
+       RESULTADOS POR LOCAL
+    ========================================= */
 
-        <thead>
-
-            <tr>
-
-                <th>Local</th>
-
-                <th>Evaluaciones</th>
-
-                <th>Promedio</th>
-
-                <th>Satisfactorio o superior</th>
-
-            </tr>
-
-        </thead>
-
-        <tbody>
-
-`;
+    const locales = {};
 
 
-Object.keys(locales).forEach(local => {
-
-    const datos = locales[local];
-
-    const promedioLocal =
-        datos.sumaPuntajes /
-        datos.evaluaciones;
-
-    const porcentajeSatisfactorioLocal =
-        (
-            datos.satisfactorias /
-            datos.evaluaciones
-        ) * 100;
+    evaluaciones.forEach(e => {
 
 
-    htmlLocales += `
+        const local =
+            String(
+                e.local || ""
+            ).trim();
 
-        <tr>
 
-            <td>
-                <strong>
-                    ${local}
-                </strong>
-            </td>
+        if (!local) {
 
-            <td>
-                ${datos.evaluaciones}
-            </td>
+            return;
 
-            <td>
-                <strong>
-                    ${Math.round(promedioLocal)}%
-                </strong>
-            </td>
+        }
 
-            <td>
-                ${Math.round(
-                    porcentajeSatisfactorioLocal
-                )}%
-            </td>
 
-        </tr>
+        if (!locales[local]) {
+
+            locales[local] = {
+
+                evaluaciones: 0,
+
+                sumaPuntajes: 0,
+
+                evaluacionesConPuntaje: 0,
+
+                satisfactorias: 0
+
+            };
+
+        }
+
+
+        const puntaje =
+            convertirPuntaje(
+                e.puntaje
+            );
+
+
+        locales[local]
+            .evaluaciones++;
+
+
+        if (!isNaN(puntaje)) {
+
+
+            locales[local]
+                .sumaPuntajes +=
+                puntaje;
+
+
+            locales[local]
+                .evaluacionesConPuntaje++;
+
+
+            if (puntaje >= 80) {
+
+                locales[local]
+                    .satisfactorias++;
+
+            }
+
+        }
+
+    });
+
+
+    let htmlLocales = `
+
+        <table class="history-table">
+
+            <thead>
+
+                <tr>
+
+                    <th>Local</th>
+
+                    <th>Evaluaciones</th>
+
+                    <th>Promedio</th>
+
+                    <th>Satisfactorio o superior</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
 
     `;
 
-});
+
+    Object.keys(locales).forEach(local => {
 
 
-htmlLocales += `
-
-        </tbody>
-
-    </table>
-
-`;
+        const datos =
+            locales[local];
 
 
-document.getElementById(
-    "resultadosLocales"
-)
-    .innerHTML =
-    htmlLocales;
+        const promedioLocal =
+            datos.evaluacionesConPuntaje > 0
 
-/* =========================================
-   RESULTADOS POR CATEGORÍA
-========================================= */
+                ? datos.sumaPuntajes /
+                  datos.evaluacionesConPuntaje
 
-const categorias = {};
-
-evaluaciones.forEach(e => {
-
-    const categoria =
-        e.categoria || "Sin categoría";
-
-    if (!categorias[categoria]) {
-
-        categorias[categoria] = {
-            evaluaciones: 0,
-            sumaPuntajes: 0,
-            satisfactorias: 0
-        };
-
-    }
-
-    let puntaje =
-        Number(
-            String(e.puntaje)
-                .replace("%", "")
-        );
-
-    if (isNaN(puntaje)) {
-        puntaje = 0;
-    }
-
-    categorias[categoria].evaluaciones++;
-
-    categorias[categoria].sumaPuntajes +=
-        puntaje;
-
-    if (puntaje >= 80) {
-
-        categorias[categoria].satisfactorias++;
-
-    }
-
-});
+                : 0;
 
 
-let htmlCategorias = `
+        const porcentajeSatisfactorioLocal =
+            datos.evaluaciones > 0
 
-    <table class="history-table">
+                ? (
+                    datos.satisfactorias /
+                    datos.evaluaciones
+                ) * 100
 
-        <thead>
+                : 0;
+
+
+        htmlLocales += `
 
             <tr>
 
-                <th>Categoría</th>
+                <td>
+                    <strong>
+                        ${local}
+                    </strong>
+                </td>
 
-                <th>Evaluaciones</th>
+                <td>
+                    ${datos.evaluaciones}
+                </td>
 
-                <th>Promedio</th>
+                <td>
+                    <strong>
+                        ${Math.round(
+                            promedioLocal
+                        )}%
+                    </strong>
+                </td>
 
-                <th>Satisfactorio o superior</th>
-
-            </tr>
-
-        </thead>
-
-        <tbody>
-
-`;
-
-
-Object.keys(categorias).forEach(categoria => {
-
-    const datos =
-        categorias[categoria];
-
-    const promedioCategoria =
-        datos.sumaPuntajes /
-        datos.evaluaciones;
-
-    const porcentajeSatisfactorioCategoria =
-        (
-            datos.satisfactorias /
-            datos.evaluaciones
-        ) * 100;
-
-
-    htmlCategorias += `
-
-        <tr>
-
-            <td>
-                <strong>
-                    ${categoria}
-                </strong>
-            </td>
-
-            <td>
-                ${datos.evaluaciones}
-            </td>
-
-            <td>
-                <strong>
+                <td>
                     ${Math.round(
-                        promedioCategoria
+                        porcentajeSatisfactorioLocal
                     )}%
-                </strong>
-            </td>
+                </td>
 
-            <td>
-                ${Math.round(
-                    porcentajeSatisfactorioCategoria
-                )}%
-            </td>
+            </tr>
 
-        </tr>
+        `;
+
+    });
+
+
+    if (
+        Object.keys(locales).length === 0
+    ) {
+
+
+        htmlLocales = `
+
+            <div class="empty">
+
+                No hay resultados válidos por local.
+
+            </div>
+
+        `;
+
+    }
+
+    else {
+
+
+        htmlLocales += `
+
+                </tbody>
+
+            </table>
+
+        `;
+
+    }
+
+
+    document.getElementById(
+        "resultadosLocales"
+    )
+        .innerHTML =
+        htmlLocales;
+
+
+
+    /* =========================================
+       RESULTADOS POR CATEGORÍA
+    ========================================= */
+
+    const categorias = {};
+
+
+    evaluaciones.forEach(e => {
+
+
+        const categoria =
+            String(
+                e.categoria || ""
+            ).trim();
+
+
+        if (!categoria) {
+
+            return;
+
+        }
+
+
+        if (!categorias[categoria]) {
+
+            categorias[categoria] = {
+
+                evaluaciones: 0,
+
+                sumaPuntajes: 0,
+
+                evaluacionesConPuntaje: 0,
+
+                satisfactorias: 0
+
+            };
+
+        }
+
+
+        const puntaje =
+            convertirPuntaje(
+                e.puntaje
+            );
+
+
+        categorias[categoria]
+            .evaluaciones++;
+
+
+        if (!isNaN(puntaje)) {
+
+
+            categorias[categoria]
+                .sumaPuntajes +=
+                puntaje;
+
+
+            categorias[categoria]
+                .evaluacionesConPuntaje++;
+
+
+            if (puntaje >= 80) {
+
+                categorias[categoria]
+                    .satisfactorias++;
+
+            }
+
+        }
+
+    });
+
+
+    let htmlCategorias = `
+
+        <table class="history-table">
+
+            <thead>
+
+                <tr>
+
+                    <th>Categoría</th>
+
+                    <th>Evaluaciones</th>
+
+                    <th>Promedio</th>
+
+                    <th>Satisfactorio o superior</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
 
     `;
 
-});
+
+    Object.keys(categorias)
+        .forEach(categoria => {
 
 
-htmlCategorias += `
-
-        </tbody>
-
-    </table>
-
-`;
+            const datos =
+                categorias[categoria];
 
 
-document.getElementById(
-    "resultadosCategorias"
-)
-    .innerHTML =
-    htmlCategorias;
+            const promedioCategoria =
+                datos.evaluacionesConPuntaje > 0
+
+                    ? datos.sumaPuntajes /
+                      datos.evaluacionesConPuntaje
+
+                    : 0;
+
+
+            const porcentajeSatisfactorioCategoria =
+                datos.evaluaciones > 0
+
+                    ? (
+                        datos.satisfactorias /
+                        datos.evaluaciones
+                    ) * 100
+
+                    : 0;
+
+
+            htmlCategorias += `
+
+                <tr>
+
+                    <td>
+                        <strong>
+                            ${categoria}
+                        </strong>
+                    </td>
+
+                    <td>
+                        ${datos.evaluaciones}
+                    </td>
+
+                    <td>
+                        <strong>
+                            ${Math.round(
+                                promedioCategoria
+                            )}%
+                        </strong>
+                    </td>
+
+                    <td>
+                        ${Math.round(
+                            porcentajeSatisfactorioCategoria
+                        )}%
+                    </td>
+
+                </tr>
+
+            `;
+
+        });
+
+
+    if (
+        Object.keys(categorias).length === 0
+    ) {
+
+
+        htmlCategorias = `
+
+            <div class="empty">
+
+                No hay resultados válidos por categoría.
+
+            </div>
+
+        `;
+
+    }
+
+    else {
+
+
+        htmlCategorias += `
+
+                </tbody>
+
+            </table>
+
+        `;
+
+    }
+
+
+    document.getElementById(
+        "resultadosCategorias"
+    )
+        .innerHTML =
+        htmlCategorias;
+
+
+    /*
+       Por ahora dejamos la sección de
+       conocimientos a reforzar como estaba.
+       La trabajaremos después con el detalle
+       de preguntas incorrectas.
+    */
+
+    document.getElementById(
+        "conocimientosReforzar"
+    )
+        .innerHTML = `
+
+            <div class="empty">
+
+                Los resultados aparecerán aquí.
+
+            </div>
+
+        `;
+
 }
+
+
+
 /* =========================================
    HISTORIAL
 ========================================= */
@@ -2933,10 +3239,18 @@ function callbackHistorial(data) {
     evaluaciones.forEach(e => {
 
 
-        if (
-            e.fecha === "Fecha"
-        ) return;
+        /*
+           Ignoramos encabezados o filas
+           que no corresponden a evaluaciones.
+        */
 
+        if (
+            !esEvaluacionValida(e)
+        ) {
+
+            return;
+
+        }
 
 
         /* FORMATO DE FECHA */
@@ -2946,7 +3260,7 @@ function callbackHistorial(data) {
 
 
         if (
-            fecha.includes("T")
+            String(fecha).includes("T")
         ) {
 
 
@@ -2990,25 +3304,25 @@ function callbackHistorial(data) {
         /* FORMATO DE PUNTAJE */
 
         let puntaje =
-            e.puntaje;
+            convertirPuntaje(
+                e.puntaje
+            );
 
 
         if (
-
-            puntaje !== "" &&
-            puntaje !== null &&
             !isNaN(puntaje)
-
         ) {
 
-
             puntaje =
-
                 Math.round(
-                    Number(puntaje) * 100
-                ) +
+                    puntaje
+                ) + "%";
 
-                "%";
+        }
+
+        else {
+
+            puntaje = "—";
 
         }
 
