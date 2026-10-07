@@ -37,7 +37,7 @@ header p {
 }
 
 .container {
-    max-width: 900px;
+    max-width: 1000px;
     margin: 30px auto;
     padding: 0 20px;
 }
@@ -71,10 +71,6 @@ h2 {
 .form-group {
     display: flex;
     flex-direction: column;
-}
-
-.form-group.full {
-    grid-column: 1 / -1;
 }
 
 label {
@@ -163,7 +159,7 @@ button:hover {
     border-left: 5px solid #20a9a6;
     padding: 15px;
     border-radius: 8px;
-    margin-bottom: 20px;
+    margin: 20px 0;
 }
 
 .answer-title {
@@ -175,6 +171,7 @@ button:hover {
 .grade-buttons {
     display: flex;
     gap: 12px;
+    margin-top: 20px;
 }
 
 .progress-container {
@@ -193,11 +190,18 @@ button:hover {
 }
 
 .result-score {
-    font-size: 48px;
+    font-size: 52px;
     font-weight: bold;
     color: #f26b21;
     text-align: center;
     margin: 20px 0;
+}
+
+.result-level {
+    text-align: center;
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 25px;
 }
 
 .result-box {
@@ -208,16 +212,46 @@ button:hover {
 }
 
 .result-item {
-    padding: 8px 0;
+    padding: 9px 0;
     font-size: 17px;
 }
 
 .recommendation {
     background: #eefafa;
     border-left: 5px solid #20a9a6;
-    padding: 15px;
-    margin-top: 15px;
+    padding: 18px;
+    margin-top: 18px;
     border-radius: 8px;
+    line-height: 1.5;
+}
+
+.detail-list {
+    margin-top: 25px;
+}
+
+.detail-item {
+    padding: 14px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    background: #f7f7f7;
+}
+
+.detail-correct {
+    border-left: 5px solid #28a745;
+}
+
+.detail-incorrect {
+    border-left: 5px solid #dc3545;
+}
+
+.detail-question {
+    font-weight: bold;
+    margin-bottom: 7px;
+}
+
+.detail-category {
+    font-size: 13px;
+    color: #777;
 }
 
 .history-table {
@@ -229,7 +263,7 @@ button:hover {
 
 .history-table th,
 .history-table td {
-    padding: 10px;
+    padding: 11px;
     border-bottom: 1px solid #ddd;
     text-align: left;
 }
@@ -237,6 +271,10 @@ button:hover {
 .history-table th {
     background: #20a9a6;
     color: white;
+}
+
+.history-table tr:hover {
+    background: #f4fafa;
 }
 
 .empty {
@@ -261,14 +299,28 @@ button:hover {
     text-align: center;
 }
 
+.category-badge {
+    display: inline-block;
+    background: #fff0e7;
+    color: #f26b21;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+.save-message {
+    text-align: center;
+    color: #28a745;
+    font-weight: bold;
+    margin-top: 18px;
+}
+
 @media (max-width: 700px) {
 
     .form-grid {
         grid-template-columns: 1fr;
-    }
-
-    .form-group.full {
-        grid-column: auto;
     }
 
     .grade-buttons {
@@ -299,229 +351,395 @@ button:hover {
 <body>
 
 <header>
+
     <h1>🍗 Evaluación de Conocimientos</h1>
+
     <p>Popeyes Louisiana Kitchen</p>
+
 </header>
+
 
 <div class="container">
 
-    <!-- =========================
-         INICIO
-    ========================== -->
 
-    <div id="inicio" class="card">
+<!-- ======================================
+     INICIO
+======================================= -->
 
-        <h2>Nueva evaluación</h2>
+<div id="inicio" class="card">
 
-        <div class="section-title">
-            Datos de la evaluación
-        </div>
+    <h2>📝 Nueva evaluación</h2>
 
-        <div class="form-grid">
+    <div class="section-title">
+        Datos de la evaluación
+    </div>
 
-            <div class="form-group">
-                <label>Asociado</label>
-                <input type="text" id="asociado" placeholder="Nombre del asociado">
-            </div>
+    <div class="form-grid">
 
-            <div class="form-group">
-                <label>Local</label>
-                <input type="text" id="local" placeholder="Ej.: Mburucuya">
-            </div>
+        <div class="form-group">
 
-            <div class="form-group">
-                <label>Puesto</label>
-                <input type="text" id="puesto" placeholder="Puesto">
-            </div>
+            <label>Asociado</label>
 
-            <div class="form-group">
-                <label>Evaluador</label>
-                <input type="text" id="evaluador" placeholder="Nombre del evaluador">
-            </div>
-
-            <div class="form-group">
-                <label>Categoría</label>
-                <select id="categoria">
-                    <option value="">Cargando categorías...</option>
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label>Cantidad de preguntas</label>
-                <select id="cantidad">
-                    <option value="5">5 preguntas</option>
-                    <option value="10">10 preguntas</option>
-                    <option value="15">15 preguntas</option>
-                    <option value="20">20 preguntas</option>
-                </select>
-            </div>
+            <input
+                type="text"
+                id="asociado"
+                placeholder="Nombre del asociado">
 
         </div>
 
-        <div class="buttons">
 
-            <button class="btn-primary" onclick="iniciarEvaluacion()">
-                ▶️ Iniciar evaluación
-            </button>
+        <div class="form-group">
 
-            <button class="btn-secondary" onclick="mostrarHistorial()">
-                📋 Ver historial
-            </button>
+            <label>Local</label>
+
+            <input
+                type="text"
+                id="local"
+                placeholder="Ej.: Mburucuya">
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label>Puesto</label>
+
+            <input
+                type="text"
+                id="puesto"
+                placeholder="Puesto">
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label>Evaluador</label>
+
+            <input
+                type="text"
+                id="evaluador"
+                placeholder="Nombre del evaluador">
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label>Categoría</label>
+
+            <select id="categoria">
+
+                <option value="">
+                    Cargando categorías...
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label>Cantidad de preguntas</label>
+
+            <select id="cantidad">
+
+                <option value="5">
+                    5 preguntas
+                </option>
+
+                <option value="10">
+                    10 preguntas
+                </option>
+
+                <option value="15">
+                    15 preguntas
+                </option>
+
+                <option value="20">
+                    20 preguntas
+                </option>
+
+            </select>
 
         </div>
 
     </div>
 
 
-    <!-- =========================
-         EVALUACIÓN
-    ========================== -->
+    <div class="buttons">
 
-    <div id="evaluacion" class="card hidden">
+        <button
+            class="btn-primary"
+            onclick="iniciarEvaluacion()">
 
-        <div class="question-number" id="numeroPregunta">
-            Pregunta 1 de 10
-        </div>
+            ▶️ Iniciar evaluación
 
-        <div class="progress-container">
-            <div class="progress" id="barraProgreso"></div>
-        </div>
+        </button>
 
-        <div class="question" id="textoPregunta">
-        </div>
 
         <button
             class="btn-secondary"
-            id="btnRespuesta"
-            onclick="mostrarRespuesta()">
-            👁️ Ver respuesta correcta
+            onclick="mostrarHistorial()">
+
+            📋 Ver historial
+
         </button>
-
-        <div class="answer-box" id="respuestaBox">
-
-            <div class="answer-title">
-                Respuesta correcta:
-            </div>
-
-            <div id="textoRespuesta"></div>
-
-        </div>
-
-        <div class="grade-buttons">
-
-            <button
-                class="btn-correct"
-                onclick="calificar(true)">
-                🟢 Correcta
-            </button>
-
-            <button
-                class="btn-incorrect"
-                onclick="calificar(false)">
-                🔴 Incorrecta
-            </button>
-
-        </div>
-
-        <div class="cancel-area">
-
-            <button
-                class="btn-danger"
-                onclick="cancelarEvaluacion()">
-                ✖ Cancelar evaluación
-            </button>
-
-        </div>
-
-    </div>
-
-
-    <!-- =========================
-         RESULTADO
-    ========================== -->
-
-    <div id="resultado" class="card hidden">
-
-        <h2>📊 Resultado de la evaluación</h2>
-
-        <div class="result-score" id="puntajeFinal">
-            0%
-        </div>
-
-        <div class="result-box">
-
-            <div class="result-item">
-                🟢 Correctas:
-                <strong id="correctasFinal">0</strong>
-            </div>
-
-            <div class="result-item">
-                🔴 Incorrectas:
-                <strong id="incorrectasFinal">0</strong>
-            </div>
-
-            <div class="result-item">
-                📚 Cantidad de preguntas:
-                <strong id="cantidadFinal">0</strong>
-            </div>
-
-            <div class="result-item">
-                🏆 Nivel de conocimiento:
-                <strong id="nivelFinal"></strong>
-            </div>
-
-        </div>
-
-        <div class="recommendation">
-
-            <strong>Recomendación:</strong>
-
-            <div id="recomendacionFinal"></div>
-
-        </div>
-
-        <div class="buttons">
-
-            <button class="btn-primary" onclick="nuevaEvaluacion()">
-                🔄 Nueva evaluación
-            </button>
-
-            <button class="btn-secondary" onclick="mostrarHistorial()">
-                📋 Ver historial
-            </button>
-
-        </div>
-
-    </div>
-
-
-    <!-- =========================
-         HISTORIAL
-    ========================== -->
-
-    <div id="historial" class="card hidden">
-
-        <h2>📋 Historial de evaluaciones</h2>
-
-        <div id="historialContenido">
-            <div class="loading">
-                Cargando historial...
-            </div>
-        </div>
-
-        <div class="buttons">
-
-            <button
-                class="btn-secondary"
-                onclick="volverInicio()">
-                ← Volver
-            </button>
-
-        </div>
 
     </div>
 
 </div>
+
+
+
+<!-- ======================================
+     EVALUACIÓN
+======================================= -->
+
+<div id="evaluacion" class="card hidden">
+
+    <div
+        class="question-number"
+        id="numeroPregunta">
+
+        Pregunta 1 de 10
+
+    </div>
+
+
+    <div class="progress-container">
+
+        <div
+            class="progress"
+            id="barraProgreso">
+        </div>
+
+    </div>
+
+
+    <div
+        class="category-badge"
+        id="categoriaPregunta">
+
+    </div>
+
+
+    <div
+        class="question"
+        id="textoPregunta">
+
+    </div>
+
+
+    <button
+        class="btn-secondary"
+        id="btnRespuesta"
+        onclick="mostrarRespuesta()">
+
+        👁️ Ver respuesta correcta
+
+    </button>
+
+
+    <div
+        class="answer-box"
+        id="respuestaBox">
+
+        <div class="answer-title">
+
+            Respuesta correcta:
+
+        </div>
+
+        <div id="textoRespuesta"></div>
+
+    </div>
+
+
+    <div class="grade-buttons">
+
+        <button
+            class="btn-correct"
+            onclick="calificar(true)">
+
+            🟢 Correcta
+
+        </button>
+
+
+        <button
+            class="btn-incorrect"
+            onclick="calificar(false)">
+
+            🔴 Incorrecta
+
+        </button>
+
+    </div>
+
+
+    <div class="cancel-area">
+
+        <button
+            class="btn-danger"
+            onclick="cancelarEvaluacion()">
+
+            ✖ Cancelar evaluación
+
+        </button>
+
+    </div>
+
+</div>
+
+
+
+<!-- ======================================
+     RESULTADO
+======================================= -->
+
+<div id="resultado" class="card hidden">
+
+    <h2>📊 Resultado de la evaluación</h2>
+
+
+    <div
+        class="result-score"
+        id="puntajeFinal">
+
+        0%
+
+    </div>
+
+
+    <div
+        class="result-level"
+        id="nivelFinal">
+
+    </div>
+
+
+    <div class="result-box">
+
+        <div class="result-item">
+
+            🟢 Correctas:
+            <strong id="correctasFinal">
+                0
+            </strong>
+
+        </div>
+
+
+        <div class="result-item">
+
+            🔴 Incorrectas:
+            <strong id="incorrectasFinal">
+                0
+            </strong>
+
+        </div>
+
+
+        <div class="result-item">
+
+            📚 Cantidad de preguntas:
+            <strong id="cantidadFinal">
+                0
+            </strong>
+
+        </div>
+
+    </div>
+
+
+    <div class="recommendation">
+
+        <strong>
+            💡 Recomendación
+        </strong>
+
+        <div id="recomendacionFinal"></div>
+
+    </div>
+
+
+    <div
+        class="detail-list"
+        id="detalleResultado">
+
+    </div>
+
+
+    <div
+        class="save-message"
+        id="mensajeGuardado">
+
+    </div>
+
+
+    <div class="buttons">
+
+        <button
+            class="btn-primary"
+            onclick="nuevaEvaluacion()">
+
+            🔄 Nueva evaluación
+
+        </button>
+
+
+        <button
+            class="btn-secondary"
+            onclick="mostrarHistorial()">
+
+            📋 Ver historial
+
+        </button>
+
+    </div>
+
+</div>
+
+
+
+<!-- ======================================
+     HISTORIAL
+======================================= -->
+
+<div id="historial" class="card hidden">
+
+    <h2>📋 Historial de evaluaciones</h2>
+
+
+    <div id="historialContenido">
+
+        <div class="loading">
+
+            Cargando historial...
+
+        </div>
+
+    </div>
+
+
+    <div class="buttons">
+
+        <button
+            class="btn-secondary"
+            onclick="volverInicio()">
+
+            ← Volver
+
+        </button>
+
+    </div>
+
+</div>
+
+</div>
+
 
 
 <iframe
@@ -529,6 +747,7 @@ button:hover {
     id="guardarFrame"
     style="display:none;">
 </iframe>
+
 
 
 <script>
@@ -546,10 +765,15 @@ const URL_SCRIPT =
 ========================================= */
 
 let preguntas = [];
+
 let preguntasEvaluacion = [];
 
+let resultadosPreguntas = [];
+
 let preguntaActual = 0;
+
 let correctas = 0;
+
 let incorrectas = 0;
 
 let datosEvaluacion = {};
@@ -561,18 +785,15 @@ let datosEvaluacion = {};
 
 function cargarPreguntas() {
 
-    const callback =
-        "callbackPreguntas";
-
     const script =
         document.createElement("script");
 
     script.src =
         URL_SCRIPT +
-        "?callback=" +
-        callback;
+        "?callback=callbackPreguntas";
 
     document.body.appendChild(script);
+
 }
 
 
@@ -585,12 +806,14 @@ function callbackPreguntas(data) {
         );
 
         return;
+
     }
 
     preguntas =
         data.preguntas || [];
 
     cargarCategorias();
+
 }
 
 
@@ -606,24 +829,32 @@ function cargarCategorias() {
     select.innerHTML =
         '<option value="">Seleccione una categoría</option>';
 
+
     const categorias =
         [...new Set(
+
             preguntas
                 .map(p => p.categoria)
                 .filter(c => c)
+
         )];
+
 
     categorias.forEach(categoria => {
 
         const option =
             document.createElement("option");
 
-        option.value = categoria;
-        option.textContent = categoria;
+        option.value =
+            categoria;
+
+        option.textContent =
+            categoria;
 
         select.appendChild(option);
 
     });
+
 }
 
 
@@ -634,23 +865,34 @@ function cargarCategorias() {
 function iniciarEvaluacion() {
 
     const asociado =
-        document.getElementById("asociado").value.trim();
+        document.getElementById("asociado")
+        .value.trim();
+
 
     const local =
-        document.getElementById("local").value.trim();
+        document.getElementById("local")
+        .value.trim();
+
 
     const puesto =
-        document.getElementById("puesto").value.trim();
+        document.getElementById("puesto")
+        .value.trim();
+
 
     const evaluador =
-        document.getElementById("evaluador").value.trim();
+        document.getElementById("evaluador")
+        .value.trim();
+
 
     const categoria =
-        document.getElementById("categoria").value;
+        document.getElementById("categoria")
+        .value;
+
 
     const cantidad =
         Number(
-            document.getElementById("cantidad").value
+            document.getElementById("cantidad")
+            .value
         );
 
 
@@ -667,6 +909,7 @@ function iniciarEvaluacion() {
         );
 
         return;
+
     }
 
 
@@ -685,6 +928,7 @@ function iniciarEvaluacion() {
         );
 
         return;
+
     }
 
 
@@ -695,8 +939,12 @@ function iniciarEvaluacion() {
 
 
     preguntaActual = 0;
+
     correctas = 0;
+
     incorrectas = 0;
+
+    resultadosPreguntas = [];
 
 
     datosEvaluacion = {
@@ -714,11 +962,14 @@ function iniciarEvaluacion() {
     document.getElementById("inicio")
         .classList.add("hidden");
 
+
     document.getElementById("historial")
         .classList.add("hidden");
 
+
     document.getElementById("resultado")
         .classList.add("hidden");
+
 
     document.getElementById("evaluacion")
         .classList.remove("hidden");
@@ -747,6 +998,11 @@ function mostrarPregunta() {
         preguntasEvaluacion.length;
 
 
+    document.getElementById("categoriaPregunta")
+        .textContent =
+        pregunta.categoria;
+
+
     document.getElementById("textoPregunta")
         .textContent =
         pregunta.pregunta;
@@ -766,7 +1022,7 @@ function mostrarPregunta() {
 
 
     const progreso =
-        ((preguntaActual) /
+        (preguntaActual /
         preguntasEvaluacion.length) * 100;
 
 
@@ -786,6 +1042,7 @@ function mostrarRespuesta() {
     document.getElementById("respuestaBox")
         .style.display = "block";
 
+
     document.getElementById("btnRespuesta")
         .style.display = "none";
 
@@ -798,6 +1055,10 @@ function mostrarRespuesta() {
 
 function calificar(esCorrecta) {
 
+    const pregunta =
+        preguntasEvaluacion[preguntaActual];
+
+
     if (esCorrecta) {
 
         correctas++;
@@ -807,6 +1068,25 @@ function calificar(esCorrecta) {
         incorrectas++;
 
     }
+
+
+    resultadosPreguntas.push({
+
+        pregunta:
+            pregunta.pregunta,
+
+        categoria:
+            pregunta.categoria,
+
+        respuesta:
+            pregunta.respuesta,
+
+        resultado:
+            esCorrecta
+                ? "Correcta"
+                : "Incorrecta"
+
+    });
 
 
     preguntaActual++;
@@ -845,6 +1125,7 @@ function finalizarEvaluacion() {
 
 
     let nivel = "";
+
     let recomendacion = "";
 
 
@@ -852,6 +1133,7 @@ function finalizarEvaluacion() {
 
         nivel =
             "🟢 EXCELENTE";
+
 
         recomendacion =
             "Mantener el nivel de conocimientos y continuar reforzando las buenas prácticas.";
@@ -863,6 +1145,7 @@ function finalizarEvaluacion() {
         nivel =
             "🟢 SATISFACTORIO";
 
+
         recomendacion =
             "Reforzar los conocimientos relacionados con los procedimientos en los que se hayan presentado dificultades.";
 
@@ -872,6 +1155,7 @@ function finalizarEvaluacion() {
 
         nivel =
             "🟡 EN DESARROLLO";
+
 
         recomendacion =
             "Realizar un refuerzo de los procedimientos y volver a evaluar los conocimientos posteriormente.";
@@ -883,6 +1167,7 @@ function finalizarEvaluacion() {
         nivel =
             "🔴 REQUIERE REFUERZO";
 
+
         recomendacion =
             "Realizar un refuerzo integral de los procedimientos y programar una nueva evaluación.";
 
@@ -892,6 +1177,11 @@ function finalizarEvaluacion() {
     document.getElementById("puntajeFinal")
         .textContent =
         puntaje + "%";
+
+
+    document.getElementById("nivelFinal")
+        .textContent =
+        nivel;
 
 
     document.getElementById("correctasFinal")
@@ -909,14 +1199,12 @@ function finalizarEvaluacion() {
         total;
 
 
-    document.getElementById("nivelFinal")
-        .textContent =
-        nivel;
-
-
     document.getElementById("recomendacionFinal")
         .textContent =
         recomendacion;
+
+
+    mostrarDetalle();
 
 
     document.getElementById("evaluacion")
@@ -937,7 +1225,79 @@ function finalizarEvaluacion() {
 
 
 /* =========================================
-   GUARDAR EN GOOGLE SHEETS
+   DETALLE DE RESULTADOS
+========================================= */
+
+function mostrarDetalle() {
+
+    const contenedor =
+        document.getElementById("detalleResultado");
+
+
+    let html = `
+
+        <h3 style="color:#20a9a6;">
+            📚 Detalle de la evaluación
+        </h3>
+
+    `;
+
+
+    resultadosPreguntas.forEach(
+        (resultado, indice) => {
+
+            const esCorrecta =
+                resultado.resultado === "Correcta";
+
+
+            html += `
+
+                <div class="
+                    detail-item
+                    ${
+                        esCorrecta
+                            ? "detail-correct"
+                            : "detail-incorrect"
+                    }
+                ">
+
+                    <div class="detail-question">
+
+                        ${
+                            esCorrecta
+                                ? "🟢"
+                                : "🔴"
+                        }
+
+                        Pregunta ${indice + 1}:
+
+                        ${resultado.pregunta}
+
+                    </div>
+
+
+                    <div class="detail-category">
+
+                        Categoría:
+                        ${resultado.categoria}
+
+                    </div>
+
+                </div>
+
+            `;
+
+        }
+    );
+
+
+    contenedor.innerHTML = html;
+
+}
+
+
+/* =========================================
+   GUARDAR EVALUACIÓN
 ========================================= */
 
 function guardarEvaluacion(
@@ -949,11 +1309,27 @@ function guardarEvaluacion(
     const form =
         document.createElement("form");
 
+
     form.method = "POST";
 
     form.action = URL_SCRIPT;
 
     form.target = "guardarFrame";
+
+
+    const detalle =
+        resultadosPreguntas
+            .map(
+                (r, i) =>
+                    (i + 1) +
+                    ". [" +
+                    r.resultado +
+                    "] " +
+                    r.categoria +
+                    " - " +
+                    r.pregunta
+            )
+            .join(" | ");
 
 
     const datos = {
@@ -986,7 +1362,13 @@ function guardarEvaluacion(
             nivel,
 
         recomendacion:
-            recomendacion
+            recomendacion,
+
+        categoria:
+            datosEvaluacion.categoria,
+
+        detalle:
+            detalle
 
     };
 
@@ -996,11 +1378,13 @@ function guardarEvaluacion(
         const input =
             document.createElement("input");
 
+
         input.type = "hidden";
 
         input.name = clave;
 
         input.value = datos[clave];
+
 
         form.appendChild(input);
 
@@ -1012,6 +1396,11 @@ function guardarEvaluacion(
     form.submit();
 
     form.remove();
+
+
+    document.getElementById("mensajeGuardado")
+        .textContent =
+        "✓ Evaluación guardada correctamente";
 
 }
 
@@ -1034,6 +1423,8 @@ function cancelarEvaluacion() {
 
     preguntasEvaluacion = [];
 
+    resultadosPreguntas = [];
+
     preguntaActual = 0;
 
     correctas = 0;
@@ -1043,6 +1434,7 @@ function cancelarEvaluacion() {
 
     document.getElementById("evaluacion")
         .classList.add("hidden");
+
 
     document.getElementById("inicio")
         .classList.remove("hidden");
@@ -1059,6 +1451,7 @@ function nuevaEvaluacion() {
     document.getElementById("resultado")
         .classList.add("hidden");
 
+
     document.getElementById("inicio")
         .classList.remove("hidden");
 
@@ -1074,11 +1467,14 @@ function mostrarHistorial() {
     document.getElementById("inicio")
         .classList.add("hidden");
 
+
     document.getElementById("resultado")
         .classList.add("hidden");
 
+
     document.getElementById("evaluacion")
         .classList.add("hidden");
+
 
     document.getElementById("historial")
         .classList.remove("hidden");
@@ -1089,18 +1485,13 @@ function mostrarHistorial() {
         '<div class="loading">Cargando historial...</div>';
 
 
-    const callback =
-        "callbackHistorial";
-
-
     const script =
         document.createElement("script");
 
 
     script.src =
         URL_SCRIPT +
-        "?accion=historial&callback=" +
-        callback;
+        "?accion=historial&callback=callbackHistorial";
 
 
     document.body.appendChild(script);
@@ -1117,6 +1508,7 @@ function callbackHistorial(data) {
             "<div class='empty'>No se pudo cargar el historial.</div>";
 
         return;
+
     }
 
 
@@ -1131,6 +1523,7 @@ function callbackHistorial(data) {
             "<div class='empty'>Todavía no hay evaluaciones registradas.</div>";
 
         return;
+
     }
 
 
@@ -1144,15 +1537,25 @@ function callbackHistorial(data) {
 
         <tr>
 
-        <th>Fecha</th>
-        <th>Asociado</th>
-        <th>Local</th>
-        <th>Puesto</th>
-        <th>Preguntas</th>
-        <th>Correctas</th>
-        <th>Incorrectas</th>
-        <th>Puntaje</th>
-        <th>Nivel</th>
+            <th>Fecha</th>
+
+            <th>Asociado</th>
+
+            <th>Local</th>
+
+            <th>Puesto</th>
+
+            <th>Categoría</th>
+
+            <th>Preguntas</th>
+
+            <th>Correctas</th>
+
+            <th>Incorrectas</th>
+
+            <th>Puntaje</th>
+
+            <th>Nivel</th>
 
         </tr>
 
@@ -1169,23 +1572,29 @@ function callbackHistorial(data) {
 
             <tr>
 
-            <td>${e.fecha}</td>
+                <td>${e.fecha}</td>
 
-            <td>${e.asociado}</td>
+                <td>${e.asociado}</td>
 
-            <td>${e.local}</td>
+                <td>${e.local}</td>
 
-            <td>${e.puesto}</td>
+                <td>${e.puesto}</td>
 
-            <td>${e.cantidad}</td>
+                <td>${e.categoria || "-"}</td>
 
-            <td>${e.correctas}</td>
+                <td>${e.cantidad}</td>
 
-            <td>${e.incorrectas}</td>
+                <td>${e.correctas}</td>
 
-            <td><strong>${e.puntaje}</strong></td>
+                <td>${e.incorrectas}</td>
 
-            <td>${e.nivel}</td>
+                <td>
+                    <strong>
+                        ${e.puntaje}
+                    </strong>
+                </td>
+
+                <td>${e.nivel}</td>
 
             </tr>
 
@@ -1212,13 +1621,14 @@ function callbackHistorial(data) {
 
 
 /* =========================================
-   VOLVER AL INICIO
+   VOLVER
 ========================================= */
 
 function volverInicio() {
 
     document.getElementById("historial")
         .classList.add("hidden");
+
 
     document.getElementById("inicio")
         .classList.remove("hidden");
