@@ -1,349 +1,603 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
+
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0">
 
 <title>Evaluación de Conocimientos - Popeyes</title>
 
+
 <style>
+
+/* =========================================
+   ESTILOS GENERALES
+========================================= */
 
 * {
     box-sizing: border-box;
 }
 
 body {
+
     margin: 0;
-    font-family: Arial, Helvetica, sans-serif;
+
+    font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
+
     background: #f4f7f7;
+
     color: #333;
+
 }
+
 
 header {
-    background: linear-gradient(135deg, #f26b21, #f47b32);
+
+    background:
+        linear-gradient(
+            135deg,
+            #f26b21,
+            #f47b32
+        );
+
     color: white;
+
     padding: 28px 20px;
+
     text-align: center;
+
 }
+
 
 header h1 {
+
     margin: 0;
+
     font-size: 28px;
+
 }
+
 
 header p {
+
     margin: 8px 0 0;
+
     font-size: 15px;
+
 }
+
 
 .container {
+
     max-width: 1000px;
+
     margin: 30px auto;
+
     padding: 0 20px;
+
 }
+
 
 .card {
+
     background: white;
+
     border-radius: 18px;
+
     padding: 30px;
-    box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+
+    box-shadow:
+        0 5px 20px
+        rgba(0,0,0,0.08);
+
     margin-bottom: 25px;
+
 }
+
 
 h2 {
+
     margin-top: 0;
+
     color: #20a9a6;
+
 }
+
 
 .section-title {
+
     font-size: 18px;
+
     font-weight: bold;
+
     margin-bottom: 18px;
+
     color: #444;
+
 }
+
 
 .form-grid {
+
     display: grid;
-    grid-template-columns: 1fr 1fr;
+
+    grid-template-columns:
+        1fr 1fr;
+
     gap: 18px;
+
 }
+
 
 .form-group {
+
     display: flex;
+
     flex-direction: column;
+
 }
 
+
 label {
+
     font-weight: bold;
+
     margin-bottom: 7px;
+
     font-size: 14px;
+
 }
+
 
 input,
 select {
+
     padding: 12px;
+
     border: 1px solid #ccc;
+
     border-radius: 9px;
+
     font-size: 15px;
+
     outline: none;
+
 }
+
 
 input:focus,
 select:focus {
+
     border-color: #20a9a6;
+
 }
+
 
 .buttons {
+
     display: flex;
+
     gap: 12px;
+
     margin-top: 25px;
+
 }
+
 
 button {
+
     border: none;
+
     border-radius: 10px;
+
     padding: 13px 22px;
+
     font-size: 15px;
+
     font-weight: bold;
+
     cursor: pointer;
+
     transition: 0.2s;
+
 }
+
 
 button:hover {
-    transform: translateY(-1px);
+
+    transform:
+        translateY(-1px);
+
 }
+
 
 .btn-primary {
+
     background: #f26b21;
+
     color: white;
+
 }
+
 
 .btn-secondary {
+
     background: #20a9a6;
+
     color: white;
+
 }
+
 
 .btn-danger {
+
     background: #d9534f;
+
     color: white;
+
 }
+
 
 .btn-correct {
+
     background: #28a745;
+
     color: white;
+
     flex: 1;
+
 }
+
 
 .btn-incorrect {
+
     background: #dc3545;
+
     color: white;
+
     flex: 1;
+
 }
+
 
 .question-number {
+
     color: #20a9a6;
+
     font-weight: bold;
+
     margin-bottom: 12px;
+
 }
+
 
 .question {
+
     font-size: 22px;
+
     font-weight: bold;
+
     line-height: 1.4;
+
     margin-bottom: 25px;
+
 }
+
 
 .answer-box {
+
     display: none;
+
     background: #eefafa;
-    border-left: 5px solid #20a9a6;
+
+    border-left:
+        5px solid #20a9a6;
+
     padding: 15px;
+
     border-radius: 8px;
+
     margin: 20px 0;
+
 }
+
 
 .answer-title {
+
     font-weight: bold;
+
     color: #20a9a6;
+
     margin-bottom: 6px;
+
 }
+
 
 .grade-buttons {
+
     display: flex;
+
     gap: 12px;
+
     margin-top: 20px;
+
 }
+
 
 .progress-container {
+
     height: 9px;
+
     background: #e5e5e5;
+
     border-radius: 20px;
+
     overflow: hidden;
+
     margin-bottom: 25px;
+
 }
+
 
 .progress {
+
     height: 100%;
+
     background: #20a9a6;
+
     width: 0%;
-    transition: width 0.3s;
+
+    transition:
+        width 0.3s;
+
 }
+
 
 .result-score {
+
     font-size: 52px;
+
     font-weight: bold;
+
     color: #f26b21;
+
     text-align: center;
+
     margin: 20px 0;
+
 }
+
 
 .result-level {
+
     text-align: center;
+
     font-size: 24px;
+
     font-weight: bold;
+
     margin-bottom: 25px;
+
 }
+
 
 .result-box {
+
     background: #f8f8f8;
+
     border-radius: 12px;
+
     padding: 20px;
+
     margin-top: 20px;
+
 }
+
 
 .result-item {
+
     padding: 9px 0;
+
     font-size: 17px;
+
 }
+
 
 .recommendation {
+
     background: #eefafa;
-    border-left: 5px solid #20a9a6;
+
+    border-left:
+        5px solid #20a9a6;
+
     padding: 18px;
+
     margin-top: 18px;
+
     border-radius: 8px;
+
     line-height: 1.5;
+
 }
+
 
 .detail-list {
+
     margin-top: 25px;
+
 }
+
 
 .detail-item {
+
     padding: 14px;
+
     border-radius: 10px;
+
     margin-bottom: 10px;
+
     background: #f7f7f7;
+
 }
+
 
 .detail-correct {
-    border-left: 5px solid #28a745;
+
+    border-left:
+        5px solid #28a745;
+
 }
+
 
 .detail-incorrect {
-    border-left: 5px solid #dc3545;
+
+    border-left:
+        5px solid #dc3545;
+
 }
+
 
 .detail-question {
+
     font-weight: bold;
+
     margin-bottom: 7px;
+
 }
+
 
 .detail-category {
+
     font-size: 13px;
+
     color: #777;
+
 }
 
+
 .history-table {
+
     width: 100%;
+
     border-collapse: collapse;
+
     margin-top: 20px;
+
     font-size: 14px;
+
 }
+
 
 .history-table th,
 .history-table td {
+
     padding: 11px;
-    border-bottom: 1px solid #ddd;
+
+    border-bottom:
+        1px solid #ddd;
+
     text-align: left;
+
 }
+
 
 .history-table th {
+
     background: #20a9a6;
+
     color: white;
+
 }
+
 
 .history-table tr:hover {
+
     background: #f4fafa;
+
 }
+
 
 .empty {
+
     text-align: center;
+
     padding: 30px;
+
     color: #777;
+
 }
+
 
 .hidden {
+
     display: none;
+
 }
+
 
 .loading {
+
     text-align: center;
+
     padding: 30px;
+
     font-weight: bold;
+
     color: #20a9a6;
+
 }
+
 
 .cancel-area {
+
     margin-top: 20px;
+
     text-align: center;
+
 }
+
 
 .category-badge {
+
     display: inline-block;
+
     background: #fff0e7;
+
     color: #f26b21;
+
     padding: 6px 12px;
+
     border-radius: 20px;
+
     font-size: 13px;
+
     font-weight: bold;
+
     margin-bottom: 15px;
+
 }
+
 
 .save-message {
+
     text-align: center;
+
     color: #28a745;
+
     font-weight: bold;
+
     margin-top: 18px;
+
 }
 
-@media (max-width: 700px) {
 
-    .form-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .grade-buttons {
-        flex-direction: column;
-    }
-
-    .buttons {
-        flex-direction: column;
-    }
-
-    .question {
-        font-size: 19px;
-    }
-
-    .card {
-        padding: 20px;
-    }
-
-    .history-table {
-        display: block;
-        overflow-x: auto;
-    }
-}
 /* =========================================
    DASHBOARD
 ========================================= */
@@ -373,7 +627,8 @@ button:hover {
     text-align: center;
 
     box-shadow:
-        0 4px 12px rgba(0,0,0,0.08);
+        0 4px 12px
+        rgba(0,0,0,0.08);
 
     border-top:
         4px solid #f26b21;
@@ -423,7 +678,8 @@ button:hover {
     margin-top: 20px;
 
     box-shadow:
-        0 4px 12px rgba(0,0,0,0.06);
+        0 4px 12px
+        rgba(0,0,0,0.06);
 
 }
 
@@ -444,17 +700,6 @@ button:hover {
 }
 
 
-.empty {
-
-    text-align: center;
-
-    color: #888;
-
-    padding: 20px;
-
-}
-
-
 /* =========================================
    RESPONSIVE
 ========================================= */
@@ -471,25 +716,78 @@ button:hover {
 }
 
 
-@media (max-width: 500px) {
+@media (max-width: 700px) {
 
-    .dashboard-grid {
+    .form-grid {
 
-        grid-template-columns: 1fr;
+        grid-template-columns:
+            1fr;
+
+    }
+
+    .grade-buttons {
+
+        flex-direction: column;
+
+    }
+
+    .buttons {
+
+        flex-direction: column;
+
+    }
+
+    .question {
+
+        font-size: 19px;
+
+    }
+
+    .card {
+
+        padding: 20px;
+
+    }
+
+    .history-table {
+
+        display: block;
+
+        overflow-x: auto;
 
     }
 
 }
+
+
+@media (max-width: 500px) {
+
+    .dashboard-grid {
+
+        grid-template-columns:
+            1fr;
+
+    }
+
+}
+
 </style>
+
 </head>
+
 
 <body>
 
+
 <header>
 
-    <h1>🍗 Evaluación de Conocimientos</h1>
+    <h1>
+        🍗 Evaluación de Conocimientos
+    </h1>
 
-    <p>Popeyes Louisiana Kitchen</p>
+    <p>
+        Popeyes Louisiana Kitchen
+    </p>
 
 </header>
 
@@ -503,17 +801,26 @@ button:hover {
 
 <div id="inicio" class="card">
 
-    <h2>📝 Nueva evaluación</h2>
+    <h2>
+        📝 Nueva evaluación
+    </h2>
+
 
     <div class="section-title">
+
         Datos de la evaluación
+
     </div>
+
 
     <div class="form-grid">
 
+
         <div class="form-group">
 
-            <label>Asociado</label>
+            <label>
+                Asociado
+            </label>
 
             <input
                 type="text"
@@ -525,7 +832,9 @@ button:hover {
 
         <div class="form-group">
 
-            <label>Local</label>
+            <label>
+                Local
+            </label>
 
             <input
                 type="text"
@@ -537,7 +846,9 @@ button:hover {
 
         <div class="form-group">
 
-            <label>Puesto</label>
+            <label>
+                Puesto
+            </label>
 
             <input
                 type="text"
@@ -549,7 +860,9 @@ button:hover {
 
         <div class="form-group">
 
-            <label>Evaluador</label>
+            <label>
+                Evaluador
+            </label>
 
             <input
                 type="text"
@@ -561,12 +874,16 @@ button:hover {
 
         <div class="form-group">
 
-            <label>Categoría</label>
+            <label>
+                Categoría
+            </label>
 
             <select id="categoria">
 
                 <option value="">
+
                     Cargando categorías...
+
                 </option>
 
             </select>
@@ -576,7 +893,9 @@ button:hover {
 
         <div class="form-group">
 
-            <label>Cantidad de preguntas</label>
+            <label>
+                Cantidad de preguntas
+            </label>
 
             <select id="cantidad">
 
@@ -605,6 +924,7 @@ button:hover {
 
     <div class="buttons">
 
+
         <button
             class="btn-primary"
             onclick="iniciarEvaluacion()">
@@ -612,14 +932,16 @@ button:hover {
             ▶️ Iniciar evaluación
 
         </button>
-        
-<button
-    class="btn-secondary"
-    onclick="mostrarDashboard()">
 
-    📊 Dashboard
 
-</button>
+        <button
+            class="btn-secondary"
+            onclick="mostrarDashboard()">
+
+            📊 Dashboard
+
+        </button>
+
 
         <button
             class="btn-secondary"
@@ -629,98 +951,146 @@ button:hover {
 
         </button>
 
+
     </div>
 
 </div>
+
 
 
 <!-- ======================================
      DASHBOARD
 ======================================= -->
 
-<div id="dashboard" class="card hidden">
+<div
+    id="dashboard"
+    class="card hidden">
+
 
     <div class="question-number">
+
         📊 Dashboard de Entrenamiento
+
     </div>
 
-    <p style="text-align:center; margin-bottom:25px;">
-        Resumen general de las evaluaciones de conocimientos
+
+    <p
+        style="
+            text-align:center;
+            margin-bottom:25px;
+        ">
+
+        Resumen general de las evaluaciones
+        de conocimientos
+
     </p>
 
 
-    <!-- ================================
-         RESUMEN GENERAL
-    ================================= -->
+    <!-- RESUMEN GENERAL -->
 
     <div class="dashboard-grid">
 
+
         <div class="dashboard-card">
-            <div class="dashboard-icon">👥</div>
+
+            <div class="dashboard-icon">
+                👥
+            </div>
+
             <div class="dashboard-title">
                 Asociados evaluados
             </div>
+
             <div
                 class="dashboard-value"
                 id="totalAsociados">
+
                 —
+
             </div>
+
         </div>
 
 
         <div class="dashboard-card">
-            <div class="dashboard-icon">📝</div>
+
+            <div class="dashboard-icon">
+                📝
+            </div>
+
             <div class="dashboard-title">
                 Evaluaciones realizadas
             </div>
+
             <div
                 class="dashboard-value"
                 id="totalEvaluaciones">
+
                 —
+
             </div>
+
         </div>
 
 
         <div class="dashboard-card">
-            <div class="dashboard-icon">📈</div>
+
+            <div class="dashboard-icon">
+                📈
+            </div>
+
             <div class="dashboard-title">
                 Promedio general
             </div>
+
             <div
                 class="dashboard-value"
                 id="promedioGeneral">
+
                 —
+
             </div>
+
         </div>
 
 
         <div class="dashboard-card">
-            <div class="dashboard-icon">🟢</div>
+
+            <div class="dashboard-icon">
+                🟢
+            </div>
+
             <div class="dashboard-title">
                 Satisfactorio o superior
             </div>
+
             <div
                 class="dashboard-value"
                 id="satisfactorioSuperior">
+
                 —
+
             </div>
+
         </div>
 
     </div>
 
 
-    <!-- ================================
-         RESULTADOS POR LOCAL
-    ================================= -->
+    <!-- RESULTADOS POR LOCAL -->
 
     <div class="dashboard-section">
 
-        <h3>📍 Resultados por local</h3>
+        <h3>
+            📍 Resultados por local
+        </h3>
 
         <div id="resultadosLocales">
 
             <div class="empty">
+
                 Los resultados aparecerán aquí.
+
             </div>
 
         </div>
@@ -728,18 +1098,20 @@ button:hover {
     </div>
 
 
-    <!-- ================================
-         RESULTADOS POR CATEGORÍA
-    ================================= -->
+    <!-- RESULTADOS POR CATEGORÍA -->
 
     <div class="dashboard-section">
 
-        <h3>📚 Resultados por categoría</h3>
+        <h3>
+            📚 Resultados por categoría
+        </h3>
 
         <div id="resultadosCategorias">
 
             <div class="empty">
+
                 Los resultados aparecerán aquí.
+
             </div>
 
         </div>
@@ -747,28 +1119,26 @@ button:hover {
     </div>
 
 
-    <!-- ================================
-         CONOCIMIENTOS A REFORZAR
-    ================================= -->
+    <!-- CONOCIMIENTOS A REFORZAR -->
 
     <div class="dashboard-section">
 
-        <h3>🚨 Principales conocimientos a reforzar</h3>
+        <h3>
+            🚨 Principales conocimientos a reforzar
+        </h3>
 
         <div id="conocimientosReforzar">
 
             <div class="empty">
+
                 Los resultados aparecerán aquí.
+
             </div>
 
         </div>
 
     </div>
 
-
-    <!-- ================================
-         VOLVER
-    ================================= -->
 
     <button
         class="btn-secondary"
@@ -779,12 +1149,17 @@ button:hover {
     </button>
 
 </div>
-    
+
+
+
 <!-- ======================================
      EVALUACIÓN
 ======================================= -->
 
-<div id="evaluacion" class="card hidden">
+<div
+    id="evaluacion"
+    class="card hidden">
+
 
     <div
         class="question-number"
@@ -800,6 +1175,7 @@ button:hover {
         <div
             class="progress"
             id="barraProgreso">
+
         </div>
 
     </div>
@@ -833,18 +1209,23 @@ button:hover {
         class="answer-box"
         id="respuestaBox">
 
+
         <div class="answer-title">
 
             Respuesta correcta:
 
         </div>
 
-        <div id="textoRespuesta"></div>
+
+        <div id="textoRespuesta">
+
+        </div>
 
     </div>
 
 
     <div class="grade-buttons">
+
 
         <button
             class="btn-correct"
@@ -886,9 +1267,14 @@ button:hover {
      RESULTADO
 ======================================= -->
 
-<div id="resultado" class="card hidden">
+<div
+    id="resultado"
+    class="card hidden">
 
-    <h2>📊 Resultado de la evaluación</h2>
+
+    <h2>
+        📊 Resultado de la evaluación
+    </h2>
 
 
     <div
@@ -909,9 +1295,11 @@ button:hover {
 
     <div class="result-box">
 
+
         <div class="result-item">
 
             🟢 Correctas:
+
             <strong id="correctasFinal">
                 0
             </strong>
@@ -922,6 +1310,7 @@ button:hover {
         <div class="result-item">
 
             🔴 Incorrectas:
+
             <strong id="incorrectasFinal">
                 0
             </strong>
@@ -932,6 +1321,7 @@ button:hover {
         <div class="result-item">
 
             📚 Cantidad de preguntas:
+
             <strong id="cantidadFinal">
                 0
             </strong>
@@ -943,11 +1333,15 @@ button:hover {
 
     <div class="recommendation">
 
+
         <strong>
             💡 Recomendación
         </strong>
 
-        <div id="recomendacionFinal"></div>
+
+        <div id="recomendacionFinal">
+
+        </div>
 
     </div>
 
@@ -967,6 +1361,7 @@ button:hover {
 
 
     <div class="buttons">
+
 
         <button
             class="btn-primary"
@@ -995,9 +1390,14 @@ button:hover {
      HISTORIAL
 ======================================= -->
 
-<div id="historial" class="card hidden">
+<div
+    id="historial"
+    class="card hidden">
 
-    <h2>📋 Historial de evaluaciones</h2>
+
+    <h2>
+        📋 Historial de evaluaciones
+    </h2>
 
 
     <div id="historialContenido">
@@ -1013,6 +1413,7 @@ button:hover {
 
     <div class="buttons">
 
+
         <button
             class="btn-secondary"
             onclick="volverInicio()">
@@ -1025,6 +1426,7 @@ button:hover {
 
 </div>
 
+
 </div>
 
 
@@ -1033,11 +1435,13 @@ button:hover {
     name="guardarFrame"
     id="guardarFrame"
     style="display:none;">
+
 </iframe>
 
 
 
 <script>
+
 
 /* =========================================
    CONFIGURACIÓN
@@ -1066,18 +1470,22 @@ let incorrectas = 0;
 let datosEvaluacion = {};
 
 
+
 /* =========================================
    CARGAR PREGUNTAS
 ========================================= */
 
 function cargarPreguntas() {
 
+
     const script =
         document.createElement("script");
+
 
     script.src =
         URL_SCRIPT +
         "?callback=callbackPreguntas";
+
 
     document.body.appendChild(script);
 
@@ -1085,6 +1493,7 @@ function cargarPreguntas() {
 
 
 function callbackPreguntas(data) {
+
 
     if (!data.success) {
 
@@ -1096,12 +1505,15 @@ function callbackPreguntas(data) {
 
     }
 
+
     preguntas =
         data.preguntas || [];
+
 
     cargarCategorias();
 
 }
+
 
 
 /* =========================================
@@ -1110,8 +1522,10 @@ function callbackPreguntas(data) {
 
 function cargarCategorias() {
 
+
     const select =
         document.getElementById("categoria");
+
 
     select.innerHTML =
         '<option value="">Seleccione una categoría</option>';
@@ -1129,14 +1543,18 @@ function cargarCategorias() {
 
     categorias.forEach(categoria => {
 
+
         const option =
             document.createElement("option");
+
 
         option.value =
             categoria;
 
+
         option.textContent =
             categoria;
+
 
         select.appendChild(option);
 
@@ -1145,11 +1563,13 @@ function cargarCategorias() {
 }
 
 
+
 /* =========================================
    INICIAR EVALUACIÓN
 ========================================= */
 
 function iniciarEvaluacion() {
+
 
     const asociado =
         document.getElementById("asociado")
@@ -1191,9 +1611,11 @@ function iniciarEvaluacion() {
         !categoria
     ) {
 
+
         alert(
             "Por favor, complete todos los datos antes de iniciar."
         );
+
 
         return;
 
@@ -1208,11 +1630,13 @@ function iniciarEvaluacion() {
 
     if (cantidad > disponibles.length) {
 
+
         alert(
             "La categoría seleccionada tiene solamente " +
             disponibles.length +
             " preguntas activas."
         );
+
 
         return;
 
@@ -1221,8 +1645,13 @@ function iniciarEvaluacion() {
 
     preguntasEvaluacion =
         [...disponibles]
-            .sort(() => Math.random() - 0.5)
-            .slice(0, cantidad);
+            .sort(
+                () => Math.random() - 0.5
+            )
+            .slice(
+                0,
+                cantidad
+            );
 
 
     preguntaActual = 0;
@@ -1258,6 +1687,10 @@ function iniciarEvaluacion() {
         .classList.add("hidden");
 
 
+    document.getElementById("dashboard")
+        .classList.add("hidden");
+
+
     document.getElementById("evaluacion")
         .classList.remove("hidden");
 
@@ -1267,11 +1700,13 @@ function iniciarEvaluacion() {
 }
 
 
+
 /* =========================================
    MOSTRAR PREGUNTA
 ========================================= */
 
 function mostrarPregunta() {
+
 
     const pregunta =
         preguntasEvaluacion[preguntaActual];
@@ -1301,16 +1736,20 @@ function mostrarPregunta() {
 
 
     document.getElementById("respuestaBox")
-        .style.display = "none";
+        .style.display =
+        "none";
 
 
     document.getElementById("btnRespuesta")
-        .style.display = "inline-block";
+        .style.display =
+        "inline-block";
 
 
     const progreso =
-        (preguntaActual /
-        preguntasEvaluacion.length) * 100;
+        (
+            preguntaActual /
+            preguntasEvaluacion.length
+        ) * 100;
 
 
     document.getElementById("barraProgreso")
@@ -1320,20 +1759,25 @@ function mostrarPregunta() {
 }
 
 
+
 /* =========================================
    MOSTRAR RESPUESTA
 ========================================= */
 
 function mostrarRespuesta() {
 
+
     document.getElementById("respuestaBox")
-        .style.display = "block";
+        .style.display =
+        "block";
 
 
     document.getElementById("btnRespuesta")
-        .style.display = "none";
+        .style.display =
+        "none";
 
 }
+
 
 
 /* =========================================
@@ -1341,6 +1785,7 @@ function mostrarRespuesta() {
 ========================================= */
 
 function calificar(esCorrecta) {
+
 
     const pregunta =
         preguntasEvaluacion[preguntaActual];
@@ -1350,7 +1795,9 @@ function calificar(esCorrecta) {
 
         correctas++;
 
-    } else {
+    }
+
+    else {
 
         incorrectas++;
 
@@ -1386,7 +1833,9 @@ function calificar(esCorrecta) {
 
         finalizarEvaluacion();
 
-    } else {
+    }
+
+    else {
 
         mostrarPregunta();
 
@@ -1395,11 +1844,13 @@ function calificar(esCorrecta) {
 }
 
 
+
 /* =========================================
    FINALIZAR
 ========================================= */
 
 function finalizarEvaluacion() {
+
 
     const total =
         preguntasEvaluacion.length;
@@ -1407,7 +1858,10 @@ function finalizarEvaluacion() {
 
     const puntaje =
         Math.round(
-            (correctas / total) * 100
+            (
+                correctas /
+                total
+            ) * 100
         );
 
 
@@ -1418,6 +1872,7 @@ function finalizarEvaluacion() {
 
     if (puntaje >= 90) {
 
+
         nivel =
             "🟢 EXCELENTE";
 
@@ -1427,7 +1882,9 @@ function finalizarEvaluacion() {
 
     }
 
+
     else if (puntaje >= 80) {
+
 
         nivel =
             "🟢 SATISFACTORIO";
@@ -1438,7 +1895,9 @@ function finalizarEvaluacion() {
 
     }
 
+
     else if (puntaje >= 70) {
+
 
         nivel =
             "🟡 EN DESARROLLO";
@@ -1449,7 +1908,9 @@ function finalizarEvaluacion() {
 
     }
 
+
     else {
+
 
         nivel =
             "🔴 REQUIERE REFUERZO";
@@ -1511,30 +1972,39 @@ function finalizarEvaluacion() {
 }
 
 
+
 /* =========================================
    DETALLE DE RESULTADOS
 ========================================= */
 
 function mostrarDetalle() {
 
+
     const contenedor =
-        document.getElementById("detalleResultado");
+        document.getElementById(
+            "detalleResultado"
+        );
 
 
     let html = `
 
         <h3 style="color:#20a9a6;">
+
             📚 Detalle de la evaluación
+
         </h3>
 
     `;
 
 
     resultadosPreguntas.forEach(
+
         (resultado, indice) => {
 
+
             const esCorrecta =
-                resultado.resultado === "Correcta";
+                resultado.resultado ===
+                "Correcta";
 
 
             html += `
@@ -1548,7 +2018,9 @@ function mostrarDetalle() {
                     }
                 ">
 
+
                     <div class="detail-question">
+
 
                         ${
                             esCorrecta
@@ -1556,31 +2028,41 @@ function mostrarDetalle() {
                                 : "🔴"
                         }
 
-                        Pregunta ${indice + 1}:
+
+                        Pregunta
+                        ${indice + 1}:
+
 
                         ${resultado.pregunta}
+
 
                     </div>
 
 
                     <div class="detail-category">
 
+
                         Categoría:
                         ${resultado.categoria}
 
+
                     </div>
+
 
                 </div>
 
             `;
 
         }
+
     );
 
 
-    contenedor.innerHTML = html;
+    contenedor.innerHTML =
+        html;
 
 }
+
 
 
 /* =========================================
@@ -1593,21 +2075,29 @@ function guardarEvaluacion(
     recomendacion
 ) {
 
+
     const form =
         document.createElement("form");
 
 
-    form.method = "POST";
+    form.method =
+        "POST";
 
-    form.action = URL_SCRIPT;
 
-    form.target = "guardarFrame";
+    form.action =
+        URL_SCRIPT;
+
+
+    form.target =
+        "guardarFrame";
 
 
     const detalle =
         resultadosPreguntas
             .map(
+
                 (r, i) =>
+
                     (i + 1) +
                     ". [" +
                     r.resultado +
@@ -1615,44 +2105,57 @@ function guardarEvaluacion(
                     r.categoria +
                     " - " +
                     r.pregunta
+
             )
             .join(" | ");
 
 
     const datos = {
 
+
         asociado:
             datosEvaluacion.asociado,
+
 
         local:
             datosEvaluacion.local,
 
+
         puesto:
             datosEvaluacion.puesto,
+
 
         evaluador:
             datosEvaluacion.evaluador,
 
+
         cantidad:
             datosEvaluacion.cantidad,
+
 
         correctas:
             correctas,
 
+
         incorrectas:
             incorrectas,
+
 
         puntaje:
             puntaje + "%",
 
+
         nivel:
             nivel,
+
 
         recomendacion:
             recomendacion,
 
+
         categoria:
             datosEvaluacion.categoria,
+
 
         detalle:
             detalle
@@ -1662,15 +2165,23 @@ function guardarEvaluacion(
 
     Object.keys(datos).forEach(clave => {
 
+
         const input =
-            document.createElement("input");
+            document.createElement(
+                "input"
+            );
 
 
-        input.type = "hidden";
+        input.type =
+            "hidden";
 
-        input.name = clave;
 
-        input.value = datos[clave];
+        input.name =
+            clave;
+
+
+        input.value =
+            datos[clave];
 
 
         form.appendChild(input);
@@ -1680,16 +2191,21 @@ function guardarEvaluacion(
 
     document.body.appendChild(form);
 
+
     form.submit();
+
 
     form.remove();
 
 
-    document.getElementById("mensajeGuardado")
+    document.getElementById(
+        "mensajeGuardado"
+    )
         .textContent =
         "✓ Evaluación guardada correctamente";
 
 }
+
 
 
 /* =========================================
@@ -1698,10 +2214,13 @@ function guardarEvaluacion(
 
 function cancelarEvaluacion() {
 
+
     const confirmar =
         confirm(
+
             "¿Está seguro de cancelar esta evaluación?\n\n" +
             "El progreso actual se perderá y no se guardará."
+
         );
 
 
@@ -1729,11 +2248,13 @@ function cancelarEvaluacion() {
 }
 
 
+
 /* =========================================
    NUEVA EVALUACIÓN
 ========================================= */
 
 function nuevaEvaluacion() {
+
 
     document.getElementById("resultado")
         .classList.add("hidden");
@@ -1745,37 +2266,52 @@ function nuevaEvaluacion() {
 }
 
 
+
 /* =========================================
-   HISTORIAL
+   DASHBOARD
 ========================================= */
+
 function mostrarDashboard() {
+
 
     document.getElementById("inicio")
         .classList.add("hidden");
 
+
     document.getElementById("resultado")
         .classList.add("hidden");
+
 
     document.getElementById("evaluacion")
         .classList.add("hidden");
 
+
     document.getElementById("historial")
         .classList.add("hidden");
+
 
     document.getElementById("dashboard")
         .classList.remove("hidden");
 
+
     document.getElementById("totalAsociados")
-        .innerText = "Cargando...";
+        .innerText =
+        "Cargando...";
+
 
     document.getElementById("totalEvaluaciones")
-        .innerText = "Cargando...";
+        .innerText =
+        "Cargando...";
+
 
     document.getElementById("promedioGeneral")
-        .innerText = "Cargando...";
+        .innerText =
+        "Cargando...";
+
 
     document.getElementById("satisfactorioSuperior")
-        .innerText = "Cargando...";
+        .innerText =
+        "Cargando...";
 
 
     const script =
@@ -1788,23 +2324,51 @@ function mostrarDashboard() {
 
 
     document.body.appendChild(script);
+
+}
+
+
+
+/* =========================================
+   CALLBACK DASHBOARD
+========================================= */
+
 function callbackDashboard(data) {
+
 
     if (!data.success) {
 
-        document.getElementById("totalAsociados")
-            .innerText = "—";
 
-        document.getElementById("totalEvaluaciones")
-            .innerText = "—";
+        document.getElementById(
+            "totalAsociados"
+        )
+            .innerText =
+            "—";
 
-        document.getElementById("promedioGeneral")
-            .innerText = "—";
 
-        document.getElementById("satisfactorioSuperior")
-            .innerText = "—";
+        document.getElementById(
+            "totalEvaluaciones"
+        )
+            .innerText =
+            "—";
+
+
+        document.getElementById(
+            "promedioGeneral"
+        )
+            .innerText =
+            "—";
+
+
+        document.getElementById(
+            "satisfactorioSuperior"
+        )
+            .innerText =
+            "—";
+
 
         return;
+
     }
 
 
@@ -1820,8 +2384,12 @@ function callbackDashboard(data) {
         evaluaciones.length;
 
 
-    document.getElementById("totalEvaluaciones")
-        .innerText = totalEvaluaciones;
+    document.getElementById(
+        "totalEvaluaciones"
+    )
+        .innerText =
+        totalEvaluaciones;
+
 
 
     /* ================================
@@ -1830,14 +2398,24 @@ function callbackDashboard(data) {
 
     const asociados =
         new Set(
+
             evaluaciones
-                .map(e => e.asociado)
-                .filter(a => a)
+                .map(
+                    e => e.asociado
+                )
+                .filter(
+                    a => a
+                )
+
         );
 
 
-    document.getElementById("totalAsociados")
-        .innerText = asociados.size;
+    document.getElementById(
+        "totalAsociados"
+    )
+        .innerText =
+        asociados.size;
+
 
 
     /* ================================
@@ -1846,18 +2424,29 @@ function callbackDashboard(data) {
 
     let sumaPuntajes = 0;
 
+
     evaluaciones.forEach(e => {
 
+
         let puntaje =
-            Number(e.puntaje);
+            Number(
+
+                String(
+                    e.puntaje
+                )
+                .replace(
+                    "%",
+                    ""
+                )
+
+            );
+
 
         if (!isNaN(puntaje)) {
 
-            if (puntaje > 1) {
-                puntaje = puntaje / 100;
-            }
+            sumaPuntajes +=
+                puntaje;
 
-            sumaPuntajes += puntaje;
         }
 
     });
@@ -1865,13 +2454,21 @@ function callbackDashboard(data) {
 
     const promedio =
         totalEvaluaciones > 0
-            ? sumaPuntajes / totalEvaluaciones
+
+            ? sumaPuntajes /
+              totalEvaluaciones
+
             : 0;
 
 
-    document.getElementById("promedioGeneral")
+    document.getElementById(
+        "promedioGeneral"
+    )
         .innerText =
-        Math.round(promedio * 100) + "%";
+        Math.round(
+            promedio
+        ) + "%";
+
 
 
     /* ================================
@@ -1883,19 +2480,29 @@ function callbackDashboard(data) {
 
     evaluaciones.forEach(e => {
 
+
         const puntaje =
-            Number(e.puntaje);
+            Number(
 
-        if (!isNaN(puntaje)) {
+                String(
+                    e.puntaje
+                )
+                .replace(
+                    "%",
+                    ""
+                )
 
-            const porcentaje =
-                puntaje <= 1
-                    ? puntaje * 100
-                    : puntaje;
+            );
 
-            if (porcentaje >= 80) {
-                satisfactorios++;
-            }
+
+        if (
+
+            !isNaN(puntaje) &&
+            puntaje >= 80
+
+        ) {
+
+            satisfactorios++;
 
         }
 
@@ -1904,17 +2511,33 @@ function callbackDashboard(data) {
 
     const porcentajeSatisfactorio =
         totalEvaluaciones > 0
-            ? (satisfactorios / totalEvaluaciones) * 100
+
+            ? (
+                satisfactorios /
+                totalEvaluaciones
+            ) * 100
+
             : 0;
 
 
-    document.getElementById("satisfactorioSuperior")
+    document.getElementById(
+        "satisfactorioSuperior"
+    )
         .innerText =
-        Math.round(porcentajeSatisfactorio) + "%";
+        Math.round(
+            porcentajeSatisfactorio
+        ) + "%";
 
 }
-}
+
+
+
+/* =========================================
+   HISTORIAL
+========================================= */
+
 function mostrarHistorial() {
+
 
     document.getElementById("inicio")
         .classList.add("hidden");
@@ -1928,11 +2551,17 @@ function mostrarHistorial() {
         .classList.add("hidden");
 
 
+    document.getElementById("dashboard")
+        .classList.add("hidden");
+
+
     document.getElementById("historial")
         .classList.remove("hidden");
 
 
-    document.getElementById("historialContenido")
+    document.getElementById(
+        "historialContenido"
+    )
         .innerHTML =
         '<div class="loading">Cargando historial...</div>';
 
@@ -1951,13 +2580,25 @@ function mostrarHistorial() {
 }
 
 
+
+/* =========================================
+   CALLBACK HISTORIAL
+========================================= */
+
 function callbackHistorial(data) {
+
 
     if (!data.success) {
 
-        document.getElementById("historialContenido")
+
+        document.getElementById(
+            "historialContenido"
+        )
             .innerHTML =
-            "<div class='empty'>No se pudo cargar el historial.</div>";
+            "<div class='empty'>" +
+            "No se pudo cargar el historial." +
+            "</div>";
+
 
         return;
 
@@ -1968,11 +2609,19 @@ function callbackHistorial(data) {
         data.evaluaciones || [];
 
 
-    if (evaluaciones.length === 0) {
+    if (
+        evaluaciones.length === 0
+    ) {
 
-        document.getElementById("historialContenido")
+
+        document.getElementById(
+            "historialContenido"
+        )
             .innerHTML =
-            "<div class='empty'>Todavía no hay evaluaciones registradas.</div>";
+            "<div class='empty'>" +
+            "Todavía no hay evaluaciones registradas." +
+            "</div>";
+
 
         return;
 
@@ -2019,26 +2668,54 @@ function callbackHistorial(data) {
 
 
     evaluaciones.forEach(e => {
-        
-        if (e.fecha === "Fecha") return;
 
-        /* ================================
-           FORMATO DE FECHA
-        ================================= */
 
-        let fecha = e.fecha || "";
+        if (
+            e.fecha === "Fecha"
+        ) return;
 
-        if (fecha.includes("T")) {
 
-            const fechaObj = new Date(fecha);
 
-            if (!isNaN(fechaObj)) {
+        /* FORMATO DE FECHA */
+
+        let fecha =
+            e.fecha || "";
+
+
+        if (
+            fecha.includes("T")
+        ) {
+
+
+            const fechaObj =
+                new Date(fecha);
+
+
+            if (
+                !isNaN(fechaObj)
+            ) {
+
 
                 fecha =
-                    String(fechaObj.getDate()).padStart(2, "0") +
+
+                    String(
+                        fechaObj.getDate()
+                    )
+                    .padStart(2, "0")
+
+                    +
+
                     "/" +
-                    String(fechaObj.getMonth() + 1).padStart(2, "0") +
+
+                    String(
+                        fechaObj.getMonth() + 1
+                    )
+                    .padStart(2, "0")
+
+                    +
+
                     "/" +
+
                     fechaObj.getFullYear();
 
             }
@@ -2046,51 +2723,81 @@ function callbackHistorial(data) {
         }
 
 
-        /* ================================
-           FORMATO DE PUNTAJE
-        ================================= */
 
-        let puntaje = e.puntaje;
+        /* FORMATO DE PUNTAJE */
+
+        let puntaje =
+            e.puntaje;
+
 
         if (
+
             puntaje !== "" &&
             puntaje !== null &&
             !isNaN(puntaje)
+
         ) {
 
+
             puntaje =
-                Math.round(Number(puntaje) * 100) + "%";
+
+                Math.round(
+                    Number(puntaje) * 100
+                ) +
+
+                "%";
 
         }
+
 
 
         html += `
 
             <tr>
 
-                <td>${fecha}</td>
-
-                <td>${e.asociado}</td>
-
-                <td>${e.local}</td>
-
-                <td>${e.puesto}</td>
-
-                <td>${e.categoria || "-"}</td>
-
-                <td>${e.cantidad}</td>
-
-                <td>${e.correctas}</td>
-
-                <td>${e.incorrectas}</td>
+                <td>
+                    ${fecha}
+                </td>
 
                 <td>
+                    ${e.asociado}
+                </td>
+
+                <td>
+                    ${e.local}
+                </td>
+
+                <td>
+                    ${e.puesto}
+                </td>
+
+                <td>
+                    ${e.categoria || "-"}
+                </td>
+
+                <td>
+                    ${e.cantidad}
+                </td>
+
+                <td>
+                    ${e.correctas}
+                </td>
+
+                <td>
+                    ${e.incorrectas}
+                </td>
+
+                <td>
+
                     <strong>
                         ${puntaje}
                     </strong>
+
                 </td>
 
-                <td>${e.nivel}</td>
+                <td>
+                    ${e.nivel}
+                </td>
 
             </tr>
 
@@ -2110,16 +2817,22 @@ function callbackHistorial(data) {
     `;
 
 
-    document.getElementById("historialContenido")
-        .innerHTML = html;
+    document.getElementById(
+        "historialContenido"
+    )
+        .innerHTML =
+        html;
 
 }
 
+
+
 /* =========================================
-   VOLVER
+   VOLVER DESDE HISTORIAL
 ========================================= */
 
 function volverInicio() {
+
 
     document.getElementById("historial")
         .classList.add("hidden");
@@ -2131,13 +2844,34 @@ function volverInicio() {
 }
 
 
+
+/* =========================================
+   VOLVER DESDE DASHBOARD
+========================================= */
+
+function volverInicioDashboard() {
+
+
+    document.getElementById("dashboard")
+        .classList.add("hidden");
+
+
+    document.getElementById("inicio")
+        .classList.remove("hidden");
+
+}
+
+
+
 /* =========================================
    INICIAR
 ========================================= */
 
 cargarPreguntas();
 
+
 </script>
 
 </body>
+
 </html>
