@@ -2658,9 +2658,142 @@ document.getElementById(
 )
     .innerHTML =
     htmlLocales;
-}
+
+/* =========================================
+   RESULTADOS POR CATEGORÍA
+========================================= */
+
+const categorias = {};
+
+evaluaciones.forEach(e => {
+
+    const categoria =
+        e.categoria || "Sin categoría";
+
+    if (!categorias[categoria]) {
+
+        categorias[categoria] = {
+            evaluaciones: 0,
+            sumaPuntajes: 0,
+            satisfactorias: 0
+        };
+
+    }
+
+    let puntaje =
+        Number(
+            String(e.puntaje)
+                .replace("%", "")
+        );
+
+    if (isNaN(puntaje)) {
+        puntaje = 0;
+    }
+
+    categorias[categoria].evaluaciones++;
+
+    categorias[categoria].sumaPuntajes +=
+        puntaje;
+
+    if (puntaje >= 80) {
+
+        categorias[categoria].satisfactorias++;
+
+    }
+
+});
 
 
+let htmlCategorias = `
+
+    <table class="history-table">
+
+        <thead>
+
+            <tr>
+
+                <th>Categoría</th>
+
+                <th>Evaluaciones</th>
+
+                <th>Promedio</th>
+
+                <th>Satisfactorio o superior</th>
+
+            </tr>
+
+        </thead>
+
+        <tbody>
+
+`;
+
+
+Object.keys(categorias).forEach(categoria => {
+
+    const datos =
+        categorias[categoria];
+
+    const promedioCategoria =
+        datos.sumaPuntajes /
+        datos.evaluaciones;
+
+    const porcentajeSatisfactorioCategoria =
+        (
+            datos.satisfactorias /
+            datos.evaluaciones
+        ) * 100;
+
+
+    htmlCategorias += `
+
+        <tr>
+
+            <td>
+                <strong>
+                    ${categoria}
+                </strong>
+            </td>
+
+            <td>
+                ${datos.evaluaciones}
+            </td>
+
+            <td>
+                <strong>
+                    ${Math.round(
+                        promedioCategoria
+                    )}%
+                </strong>
+            </td>
+
+            <td>
+                ${Math.round(
+                    porcentajeSatisfactorioCategoria
+                )}%
+            </td>
+
+        </tr>
+
+    `;
+
+});
+
+
+htmlCategorias += `
+
+        </tbody>
+
+    </table>
+
+`;
+
+
+document.getElementById(
+    "resultadosCategorias"
+)
+    .innerHTML =
+    htmlCategorias;
 
 /* =========================================
    HISTORIAL
