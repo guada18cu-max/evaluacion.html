@@ -1753,21 +1753,41 @@ function mostrarDashboard() {
     document.getElementById("inicio")
         .classList.add("hidden");
 
-
     document.getElementById("resultado")
         .classList.add("hidden");
-
 
     document.getElementById("evaluacion")
         .classList.add("hidden");
 
-
     document.getElementById("historial")
         .classList.add("hidden");
 
-
     document.getElementById("dashboard")
         .classList.remove("hidden");
+
+    document.getElementById("totalAsociados")
+        .innerText = "Cargando...";
+
+    document.getElementById("totalEvaluaciones")
+        .innerText = "Cargando...";
+
+    document.getElementById("promedioGeneral")
+        .innerText = "Cargando...";
+
+    document.getElementById("satisfactorioSuperior")
+        .innerText = "Cargando...";
+
+
+    const script =
+        document.createElement("script");
+
+
+    script.src =
+        URL_SCRIPT +
+        "?accion=historial&callback=callbackDashboard";
+
+
+    document.body.appendChild(script);
 
 }
 function mostrarHistorial() {
