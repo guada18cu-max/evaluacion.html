@@ -344,7 +344,142 @@ button:hover {
         overflow-x: auto;
     }
 }
+/* =========================================
+   DASHBOARD
+========================================= */
 
+.dashboard-grid {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(4, 1fr);
+
+    gap: 18px;
+
+    margin: 25px 0;
+
+}
+
+
+.dashboard-card {
+
+    background: #ffffff;
+
+    border-radius: 16px;
+
+    padding: 22px 15px;
+
+    text-align: center;
+
+    box-shadow:
+        0 4px 12px rgba(0,0,0,0.08);
+
+    border-top:
+        4px solid #f26b21;
+
+}
+
+
+.dashboard-icon {
+
+    font-size: 30px;
+
+    margin-bottom: 8px;
+
+}
+
+
+.dashboard-title {
+
+    font-size: 14px;
+
+    color: #666;
+
+    margin-bottom: 8px;
+
+}
+
+
+.dashboard-value {
+
+    font-size: 28px;
+
+    font-weight: bold;
+
+    color: #20a9a6;
+
+}
+
+
+.dashboard-section {
+
+    background: #ffffff;
+
+    border-radius: 16px;
+
+    padding: 22px;
+
+    margin-top: 20px;
+
+    box-shadow:
+        0 4px 12px rgba(0,0,0,0.06);
+
+}
+
+
+.dashboard-section h3 {
+
+    margin-top: 0;
+
+    color: #f26b21;
+
+    font-size: 18px;
+
+    border-bottom:
+        1px solid #eeeeee;
+
+    padding-bottom: 10px;
+
+}
+
+
+.empty {
+
+    text-align: center;
+
+    color: #888;
+
+    padding: 20px;
+
+}
+
+
+/* =========================================
+   RESPONSIVE
+========================================= */
+
+@media (max-width: 800px) {
+
+    .dashboard-grid {
+
+        grid-template-columns:
+            repeat(2, 1fr);
+
+    }
+
+}
+
+
+@media (max-width: 500px) {
+
+    .dashboard-grid {
+
+        grid-template-columns: 1fr;
+
+    }
+
+}
 </style>
 </head>
 
@@ -499,7 +634,152 @@ button:hover {
 </div>
 
 
+<!-- ======================================
+     DASHBOARD
+======================================= -->
 
+<div id="dashboard" class="card hidden">
+
+    <div class="question-number">
+        📊 Dashboard de Entrenamiento
+    </div>
+
+    <p style="text-align:center; margin-bottom:25px;">
+        Resumen general de las evaluaciones de conocimientos
+    </p>
+
+
+    <!-- ================================
+         RESUMEN GENERAL
+    ================================= -->
+
+    <div class="dashboard-grid">
+
+        <div class="dashboard-card">
+            <div class="dashboard-icon">👥</div>
+            <div class="dashboard-title">
+                Asociados evaluados
+            </div>
+            <div
+                class="dashboard-value"
+                id="totalAsociados">
+                —
+            </div>
+        </div>
+
+
+        <div class="dashboard-card">
+            <div class="dashboard-icon">📝</div>
+            <div class="dashboard-title">
+                Evaluaciones realizadas
+            </div>
+            <div
+                class="dashboard-value"
+                id="totalEvaluaciones">
+                —
+            </div>
+        </div>
+
+
+        <div class="dashboard-card">
+            <div class="dashboard-icon">📈</div>
+            <div class="dashboard-title">
+                Promedio general
+            </div>
+            <div
+                class="dashboard-value"
+                id="promedioGeneral">
+                —
+            </div>
+        </div>
+
+
+        <div class="dashboard-card">
+            <div class="dashboard-icon">🟢</div>
+            <div class="dashboard-title">
+                Satisfactorio o superior
+            </div>
+            <div
+                class="dashboard-value"
+                id="satisfactorioSuperior">
+                —
+            </div>
+        </div>
+
+    </div>
+
+
+    <!-- ================================
+         RESULTADOS POR LOCAL
+    ================================= -->
+
+    <div class="dashboard-section">
+
+        <h3>📍 Resultados por local</h3>
+
+        <div id="resultadosLocales">
+
+            <div class="empty">
+                Los resultados aparecerán aquí.
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ================================
+         RESULTADOS POR CATEGORÍA
+    ================================= -->
+
+    <div class="dashboard-section">
+
+        <h3>📚 Resultados por categoría</h3>
+
+        <div id="resultadosCategorias">
+
+            <div class="empty">
+                Los resultados aparecerán aquí.
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ================================
+         CONOCIMIENTOS A REFORZAR
+    ================================= -->
+
+    <div class="dashboard-section">
+
+        <h3>🚨 Principales conocimientos a reforzar</h3>
+
+        <div id="conocimientosReforzar">
+
+            <div class="empty">
+                Los resultados aparecerán aquí.
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ================================
+         VOLVER
+    ================================= -->
+
+    <button
+        class="btn-secondary"
+        onclick="volverInicioDashboard()">
+
+        ⬅️ Volver al inicio
+
+    </button>
+
+</div>
+    
 <!-- ======================================
      EVALUACIÓN
 ======================================= -->
@@ -1468,7 +1748,28 @@ function nuevaEvaluacion() {
 /* =========================================
    HISTORIAL
 ========================================= */
+function mostrarDashboard() {
 
+    document.getElementById("inicio")
+        .classList.add("hidden");
+
+
+    document.getElementById("resultado")
+        .classList.add("hidden");
+
+
+    document.getElementById("evaluacion")
+        .classList.add("hidden");
+
+
+    document.getElementById("historial")
+        .classList.add("hidden");
+
+
+    document.getElementById("dashboard")
+        .classList.remove("hidden");
+
+}
 function mostrarHistorial() {
 
     document.getElementById("inicio")
