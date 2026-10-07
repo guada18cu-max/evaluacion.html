@@ -1,0 +1,1238 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Evaluación de Conocimientos - Popeyes</title>
+
+<style>
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    background: #f4f7f7;
+    color: #333;
+}
+
+header {
+    background: linear-gradient(135deg, #f26b21, #f47b32);
+    color: white;
+    padding: 28px 20px;
+    text-align: center;
+}
+
+header h1 {
+    margin: 0;
+    font-size: 28px;
+}
+
+header p {
+    margin: 8px 0 0;
+    font-size: 15px;
+}
+
+.container {
+    max-width: 900px;
+    margin: 30px auto;
+    padding: 0 20px;
+}
+
+.card {
+    background: white;
+    border-radius: 18px;
+    padding: 30px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+    margin-bottom: 25px;
+}
+
+h2 {
+    margin-top: 0;
+    color: #20a9a6;
+}
+
+.section-title {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 18px;
+    color: #444;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group.full {
+    grid-column: 1 / -1;
+}
+
+label {
+    font-weight: bold;
+    margin-bottom: 7px;
+    font-size: 14px;
+}
+
+input,
+select {
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 9px;
+    font-size: 15px;
+    outline: none;
+}
+
+input:focus,
+select:focus {
+    border-color: #20a9a6;
+}
+
+.buttons {
+    display: flex;
+    gap: 12px;
+    margin-top: 25px;
+}
+
+button {
+    border: none;
+    border-radius: 10px;
+    padding: 13px 22px;
+    font-size: 15px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+button:hover {
+    transform: translateY(-1px);
+}
+
+.btn-primary {
+    background: #f26b21;
+    color: white;
+}
+
+.btn-secondary {
+    background: #20a9a6;
+    color: white;
+}
+
+.btn-danger {
+    background: #d9534f;
+    color: white;
+}
+
+.btn-correct {
+    background: #28a745;
+    color: white;
+    flex: 1;
+}
+
+.btn-incorrect {
+    background: #dc3545;
+    color: white;
+    flex: 1;
+}
+
+.question-number {
+    color: #20a9a6;
+    font-weight: bold;
+    margin-bottom: 12px;
+}
+
+.question {
+    font-size: 22px;
+    font-weight: bold;
+    line-height: 1.4;
+    margin-bottom: 25px;
+}
+
+.answer-box {
+    display: none;
+    background: #eefafa;
+    border-left: 5px solid #20a9a6;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+.answer-title {
+    font-weight: bold;
+    color: #20a9a6;
+    margin-bottom: 6px;
+}
+
+.grade-buttons {
+    display: flex;
+    gap: 12px;
+}
+
+.progress-container {
+    height: 9px;
+    background: #e5e5e5;
+    border-radius: 20px;
+    overflow: hidden;
+    margin-bottom: 25px;
+}
+
+.progress {
+    height: 100%;
+    background: #20a9a6;
+    width: 0%;
+    transition: width 0.3s;
+}
+
+.result-score {
+    font-size: 48px;
+    font-weight: bold;
+    color: #f26b21;
+    text-align: center;
+    margin: 20px 0;
+}
+
+.result-box {
+    background: #f8f8f8;
+    border-radius: 12px;
+    padding: 20px;
+    margin-top: 20px;
+}
+
+.result-item {
+    padding: 8px 0;
+    font-size: 17px;
+}
+
+.recommendation {
+    background: #eefafa;
+    border-left: 5px solid #20a9a6;
+    padding: 15px;
+    margin-top: 15px;
+    border-radius: 8px;
+}
+
+.history-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    font-size: 14px;
+}
+
+.history-table th,
+.history-table td {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+    text-align: left;
+}
+
+.history-table th {
+    background: #20a9a6;
+    color: white;
+}
+
+.empty {
+    text-align: center;
+    padding: 30px;
+    color: #777;
+}
+
+.hidden {
+    display: none;
+}
+
+.loading {
+    text-align: center;
+    padding: 30px;
+    font-weight: bold;
+    color: #20a9a6;
+}
+
+.cancel-area {
+    margin-top: 20px;
+    text-align: center;
+}
+
+@media (max-width: 700px) {
+
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .form-group.full {
+        grid-column: auto;
+    }
+
+    .grade-buttons {
+        flex-direction: column;
+    }
+
+    .buttons {
+        flex-direction: column;
+    }
+
+    .question {
+        font-size: 19px;
+    }
+
+    .card {
+        padding: 20px;
+    }
+
+    .history-table {
+        display: block;
+        overflow-x: auto;
+    }
+}
+
+</style>
+</head>
+
+<body>
+
+<header>
+    <h1>🍗 Evaluación de Conocimientos</h1>
+    <p>Popeyes Louisiana Kitchen</p>
+</header>
+
+<div class="container">
+
+    <!-- =========================
+         INICIO
+    ========================== -->
+
+    <div id="inicio" class="card">
+
+        <h2>Nueva evaluación</h2>
+
+        <div class="section-title">
+            Datos de la evaluación
+        </div>
+
+        <div class="form-grid">
+
+            <div class="form-group">
+                <label>Asociado</label>
+                <input type="text" id="asociado" placeholder="Nombre del asociado">
+            </div>
+
+            <div class="form-group">
+                <label>Local</label>
+                <input type="text" id="local" placeholder="Ej.: Mburucuya">
+            </div>
+
+            <div class="form-group">
+                <label>Puesto</label>
+                <input type="text" id="puesto" placeholder="Puesto">
+            </div>
+
+            <div class="form-group">
+                <label>Evaluador</label>
+                <input type="text" id="evaluador" placeholder="Nombre del evaluador">
+            </div>
+
+            <div class="form-group">
+                <label>Categoría</label>
+                <select id="categoria">
+                    <option value="">Cargando categorías...</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Cantidad de preguntas</label>
+                <select id="cantidad">
+                    <option value="5">5 preguntas</option>
+                    <option value="10">10 preguntas</option>
+                    <option value="15">15 preguntas</option>
+                    <option value="20">20 preguntas</option>
+                </select>
+            </div>
+
+        </div>
+
+        <div class="buttons">
+
+            <button class="btn-primary" onclick="iniciarEvaluacion()">
+                ▶️ Iniciar evaluación
+            </button>
+
+            <button class="btn-secondary" onclick="mostrarHistorial()">
+                📋 Ver historial
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================
+         EVALUACIÓN
+    ========================== -->
+
+    <div id="evaluacion" class="card hidden">
+
+        <div class="question-number" id="numeroPregunta">
+            Pregunta 1 de 10
+        </div>
+
+        <div class="progress-container">
+            <div class="progress" id="barraProgreso"></div>
+        </div>
+
+        <div class="question" id="textoPregunta">
+        </div>
+
+        <button
+            class="btn-secondary"
+            id="btnRespuesta"
+            onclick="mostrarRespuesta()">
+            👁️ Ver respuesta correcta
+        </button>
+
+        <div class="answer-box" id="respuestaBox">
+
+            <div class="answer-title">
+                Respuesta correcta:
+            </div>
+
+            <div id="textoRespuesta"></div>
+
+        </div>
+
+        <div class="grade-buttons">
+
+            <button
+                class="btn-correct"
+                onclick="calificar(true)">
+                🟢 Correcta
+            </button>
+
+            <button
+                class="btn-incorrect"
+                onclick="calificar(false)">
+                🔴 Incorrecta
+            </button>
+
+        </div>
+
+        <div class="cancel-area">
+
+            <button
+                class="btn-danger"
+                onclick="cancelarEvaluacion()">
+                ✖ Cancelar evaluación
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================
+         RESULTADO
+    ========================== -->
+
+    <div id="resultado" class="card hidden">
+
+        <h2>📊 Resultado de la evaluación</h2>
+
+        <div class="result-score" id="puntajeFinal">
+            0%
+        </div>
+
+        <div class="result-box">
+
+            <div class="result-item">
+                🟢 Correctas:
+                <strong id="correctasFinal">0</strong>
+            </div>
+
+            <div class="result-item">
+                🔴 Incorrectas:
+                <strong id="incorrectasFinal">0</strong>
+            </div>
+
+            <div class="result-item">
+                📚 Cantidad de preguntas:
+                <strong id="cantidadFinal">0</strong>
+            </div>
+
+            <div class="result-item">
+                🏆 Nivel de conocimiento:
+                <strong id="nivelFinal"></strong>
+            </div>
+
+        </div>
+
+        <div class="recommendation">
+
+            <strong>Recomendación:</strong>
+
+            <div id="recomendacionFinal"></div>
+
+        </div>
+
+        <div class="buttons">
+
+            <button class="btn-primary" onclick="nuevaEvaluacion()">
+                🔄 Nueva evaluación
+            </button>
+
+            <button class="btn-secondary" onclick="mostrarHistorial()">
+                📋 Ver historial
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================
+         HISTORIAL
+    ========================== -->
+
+    <div id="historial" class="card hidden">
+
+        <h2>📋 Historial de evaluaciones</h2>
+
+        <div id="historialContenido">
+            <div class="loading">
+                Cargando historial...
+            </div>
+        </div>
+
+        <div class="buttons">
+
+            <button
+                class="btn-secondary"
+                onclick="volverInicio()">
+                ← Volver
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<iframe
+    name="guardarFrame"
+    id="guardarFrame"
+    style="display:none;">
+</iframe>
+
+
+<script>
+
+/* =========================================
+   CONFIGURACIÓN
+========================================= */
+
+const URL_SCRIPT =
+"https://script.google.com/macros/s/AKfycbz4dBZT9xoMlZrsTjjfZ5tkeQeXw55bJO23r18IYeRnJvA52hLzqRqzT_M87YFz0W3k/exec";
+
+
+/* =========================================
+   VARIABLES
+========================================= */
+
+let preguntas = [];
+let preguntasEvaluacion = [];
+
+let preguntaActual = 0;
+let correctas = 0;
+let incorrectas = 0;
+
+let datosEvaluacion = {};
+
+
+/* =========================================
+   CARGAR PREGUNTAS
+========================================= */
+
+function cargarPreguntas() {
+
+    const callback =
+        "callbackPreguntas";
+
+    const script =
+        document.createElement("script");
+
+    script.src =
+        URL_SCRIPT +
+        "?callback=" +
+        callback;
+
+    document.body.appendChild(script);
+}
+
+
+function callbackPreguntas(data) {
+
+    if (!data.success) {
+
+        alert(
+            "No se pudieron cargar las preguntas."
+        );
+
+        return;
+    }
+
+    preguntas =
+        data.preguntas || [];
+
+    cargarCategorias();
+}
+
+
+/* =========================================
+   CATEGORÍAS
+========================================= */
+
+function cargarCategorias() {
+
+    const select =
+        document.getElementById("categoria");
+
+    select.innerHTML =
+        '<option value="">Seleccione una categoría</option>';
+
+    const categorias =
+        [...new Set(
+            preguntas
+                .map(p => p.categoria)
+                .filter(c => c)
+        )];
+
+    categorias.forEach(categoria => {
+
+        const option =
+            document.createElement("option");
+
+        option.value = categoria;
+        option.textContent = categoria;
+
+        select.appendChild(option);
+
+    });
+}
+
+
+/* =========================================
+   INICIAR EVALUACIÓN
+========================================= */
+
+function iniciarEvaluacion() {
+
+    const asociado =
+        document.getElementById("asociado").value.trim();
+
+    const local =
+        document.getElementById("local").value.trim();
+
+    const puesto =
+        document.getElementById("puesto").value.trim();
+
+    const evaluador =
+        document.getElementById("evaluador").value.trim();
+
+    const categoria =
+        document.getElementById("categoria").value;
+
+    const cantidad =
+        Number(
+            document.getElementById("cantidad").value
+        );
+
+
+    if (
+        !asociado ||
+        !local ||
+        !puesto ||
+        !evaluador ||
+        !categoria
+    ) {
+
+        alert(
+            "Por favor, complete todos los datos antes de iniciar."
+        );
+
+        return;
+    }
+
+
+    const disponibles =
+        preguntas.filter(
+            p => p.categoria === categoria
+        );
+
+
+    if (cantidad > disponibles.length) {
+
+        alert(
+            "La categoría seleccionada tiene solamente " +
+            disponibles.length +
+            " preguntas activas."
+        );
+
+        return;
+    }
+
+
+    preguntasEvaluacion =
+        [...disponibles]
+            .sort(() => Math.random() - 0.5)
+            .slice(0, cantidad);
+
+
+    preguntaActual = 0;
+    correctas = 0;
+    incorrectas = 0;
+
+
+    datosEvaluacion = {
+
+        asociado,
+        local,
+        puesto,
+        evaluador,
+        categoria,
+        cantidad
+
+    };
+
+
+    document.getElementById("inicio")
+        .classList.add("hidden");
+
+    document.getElementById("historial")
+        .classList.add("hidden");
+
+    document.getElementById("resultado")
+        .classList.add("hidden");
+
+    document.getElementById("evaluacion")
+        .classList.remove("hidden");
+
+
+    mostrarPregunta();
+
+}
+
+
+/* =========================================
+   MOSTRAR PREGUNTA
+========================================= */
+
+function mostrarPregunta() {
+
+    const pregunta =
+        preguntasEvaluacion[preguntaActual];
+
+
+    document.getElementById("numeroPregunta")
+        .textContent =
+        "Pregunta " +
+        (preguntaActual + 1) +
+        " de " +
+        preguntasEvaluacion.length;
+
+
+    document.getElementById("textoPregunta")
+        .textContent =
+        pregunta.pregunta;
+
+
+    document.getElementById("textoRespuesta")
+        .textContent =
+        pregunta.respuesta;
+
+
+    document.getElementById("respuestaBox")
+        .style.display = "none";
+
+
+    document.getElementById("btnRespuesta")
+        .style.display = "inline-block";
+
+
+    const progreso =
+        ((preguntaActual) /
+        preguntasEvaluacion.length) * 100;
+
+
+    document.getElementById("barraProgreso")
+        .style.width =
+        progreso + "%";
+
+}
+
+
+/* =========================================
+   MOSTRAR RESPUESTA
+========================================= */
+
+function mostrarRespuesta() {
+
+    document.getElementById("respuestaBox")
+        .style.display = "block";
+
+    document.getElementById("btnRespuesta")
+        .style.display = "none";
+
+}
+
+
+/* =========================================
+   CALIFICAR
+========================================= */
+
+function calificar(esCorrecta) {
+
+    if (esCorrecta) {
+
+        correctas++;
+
+    } else {
+
+        incorrectas++;
+
+    }
+
+
+    preguntaActual++;
+
+
+    if (
+        preguntaActual >=
+        preguntasEvaluacion.length
+    ) {
+
+        finalizarEvaluacion();
+
+    } else {
+
+        mostrarPregunta();
+
+    }
+
+}
+
+
+/* =========================================
+   FINALIZAR
+========================================= */
+
+function finalizarEvaluacion() {
+
+    const total =
+        preguntasEvaluacion.length;
+
+
+    const puntaje =
+        Math.round(
+            (correctas / total) * 100
+        );
+
+
+    let nivel = "";
+    let recomendacion = "";
+
+
+    if (puntaje >= 90) {
+
+        nivel =
+            "🟢 EXCELENTE";
+
+        recomendacion =
+            "Mantener el nivel de conocimientos y continuar reforzando las buenas prácticas.";
+
+    }
+
+    else if (puntaje >= 80) {
+
+        nivel =
+            "🟢 SATISFACTORIO";
+
+        recomendacion =
+            "Reforzar los conocimientos relacionados con los procedimientos en los que se hayan presentado dificultades.";
+
+    }
+
+    else if (puntaje >= 70) {
+
+        nivel =
+            "🟡 EN DESARROLLO";
+
+        recomendacion =
+            "Realizar un refuerzo de los procedimientos y volver a evaluar los conocimientos posteriormente.";
+
+    }
+
+    else {
+
+        nivel =
+            "🔴 REQUIERE REFUERZO";
+
+        recomendacion =
+            "Realizar un refuerzo integral de los procedimientos y programar una nueva evaluación.";
+
+    }
+
+
+    document.getElementById("puntajeFinal")
+        .textContent =
+        puntaje + "%";
+
+
+    document.getElementById("correctasFinal")
+        .textContent =
+        correctas;
+
+
+    document.getElementById("incorrectasFinal")
+        .textContent =
+        incorrectas;
+
+
+    document.getElementById("cantidadFinal")
+        .textContent =
+        total;
+
+
+    document.getElementById("nivelFinal")
+        .textContent =
+        nivel;
+
+
+    document.getElementById("recomendacionFinal")
+        .textContent =
+        recomendacion;
+
+
+    document.getElementById("evaluacion")
+        .classList.add("hidden");
+
+
+    document.getElementById("resultado")
+        .classList.remove("hidden");
+
+
+    guardarEvaluacion(
+        puntaje,
+        nivel,
+        recomendacion
+    );
+
+}
+
+
+/* =========================================
+   GUARDAR EN GOOGLE SHEETS
+========================================= */
+
+function guardarEvaluacion(
+    puntaje,
+    nivel,
+    recomendacion
+) {
+
+    const form =
+        document.createElement("form");
+
+    form.method = "POST";
+
+    form.action = URL_SCRIPT;
+
+    form.target = "guardarFrame";
+
+
+    const datos = {
+
+        asociado:
+            datosEvaluacion.asociado,
+
+        local:
+            datosEvaluacion.local,
+
+        puesto:
+            datosEvaluacion.puesto,
+
+        evaluador:
+            datosEvaluacion.evaluador,
+
+        cantidad:
+            datosEvaluacion.cantidad,
+
+        correctas:
+            correctas,
+
+        incorrectas:
+            incorrectas,
+
+        puntaje:
+            puntaje + "%",
+
+        nivel:
+            nivel,
+
+        recomendacion:
+            recomendacion
+
+    };
+
+
+    Object.keys(datos).forEach(clave => {
+
+        const input =
+            document.createElement("input");
+
+        input.type = "hidden";
+
+        input.name = clave;
+
+        input.value = datos[clave];
+
+        form.appendChild(input);
+
+    });
+
+
+    document.body.appendChild(form);
+
+    form.submit();
+
+    form.remove();
+
+}
+
+
+/* =========================================
+   CANCELAR
+========================================= */
+
+function cancelarEvaluacion() {
+
+    const confirmar =
+        confirm(
+            "¿Está seguro de cancelar esta evaluación?\n\n" +
+            "El progreso actual se perderá y no se guardará."
+        );
+
+
+    if (!confirmar) return;
+
+
+    preguntasEvaluacion = [];
+
+    preguntaActual = 0;
+
+    correctas = 0;
+
+    incorrectas = 0;
+
+
+    document.getElementById("evaluacion")
+        .classList.add("hidden");
+
+    document.getElementById("inicio")
+        .classList.remove("hidden");
+
+}
+
+
+/* =========================================
+   NUEVA EVALUACIÓN
+========================================= */
+
+function nuevaEvaluacion() {
+
+    document.getElementById("resultado")
+        .classList.add("hidden");
+
+    document.getElementById("inicio")
+        .classList.remove("hidden");
+
+}
+
+
+/* =========================================
+   HISTORIAL
+========================================= */
+
+function mostrarHistorial() {
+
+    document.getElementById("inicio")
+        .classList.add("hidden");
+
+    document.getElementById("resultado")
+        .classList.add("hidden");
+
+    document.getElementById("evaluacion")
+        .classList.add("hidden");
+
+    document.getElementById("historial")
+        .classList.remove("hidden");
+
+
+    document.getElementById("historialContenido")
+        .innerHTML =
+        '<div class="loading">Cargando historial...</div>';
+
+
+    const callback =
+        "callbackHistorial";
+
+
+    const script =
+        document.createElement("script");
+
+
+    script.src =
+        URL_SCRIPT +
+        "?accion=historial&callback=" +
+        callback;
+
+
+    document.body.appendChild(script);
+
+}
+
+
+function callbackHistorial(data) {
+
+    if (!data.success) {
+
+        document.getElementById("historialContenido")
+            .innerHTML =
+            "<div class='empty'>No se pudo cargar el historial.</div>";
+
+        return;
+    }
+
+
+    const evaluaciones =
+        data.evaluaciones || [];
+
+
+    if (evaluaciones.length === 0) {
+
+        document.getElementById("historialContenido")
+            .innerHTML =
+            "<div class='empty'>Todavía no hay evaluaciones registradas.</div>";
+
+        return;
+    }
+
+
+    let html = `
+
+        <div style="overflow-x:auto;">
+
+        <table class="history-table">
+
+        <thead>
+
+        <tr>
+
+        <th>Fecha</th>
+        <th>Asociado</th>
+        <th>Local</th>
+        <th>Puesto</th>
+        <th>Preguntas</th>
+        <th>Correctas</th>
+        <th>Incorrectas</th>
+        <th>Puntaje</th>
+        <th>Nivel</th>
+
+        </tr>
+
+        </thead>
+
+        <tbody>
+
+    `;
+
+
+    evaluaciones.forEach(e => {
+
+        html += `
+
+            <tr>
+
+            <td>${e.fecha}</td>
+
+            <td>${e.asociado}</td>
+
+            <td>${e.local}</td>
+
+            <td>${e.puesto}</td>
+
+            <td>${e.cantidad}</td>
+
+            <td>${e.correctas}</td>
+
+            <td>${e.incorrectas}</td>
+
+            <td><strong>${e.puntaje}</strong></td>
+
+            <td>${e.nivel}</td>
+
+            </tr>
+
+        `;
+
+    });
+
+
+    html += `
+
+        </tbody>
+
+        </table>
+
+        </div>
+
+    `;
+
+
+    document.getElementById("historialContenido")
+        .innerHTML = html;
+
+}
+
+
+/* =========================================
+   VOLVER AL INICIO
+========================================= */
+
+function volverInicio() {
+
+    document.getElementById("historial")
+        .classList.add("hidden");
+
+    document.getElementById("inicio")
+        .classList.remove("hidden");
+
+}
+
+
+/* =========================================
+   INICIAR
+========================================= */
+
+cargarPreguntas();
+
+</script>
+
+</body>
+</html>
