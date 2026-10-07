@@ -1567,6 +1567,8 @@ function callbackHistorial(data) {
 
 
     evaluaciones.forEach(e => {
+        
+        if (e.fecha === "Fecha") return;
 
         /* ================================
            FORMATO DE FECHA
