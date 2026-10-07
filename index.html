@@ -1568,11 +1568,53 @@ function callbackHistorial(data) {
 
     evaluaciones.forEach(e => {
 
+        /* ================================
+           FORMATO DE FECHA
+        ================================= */
+
+        let fecha = e.fecha || "";
+
+        if (fecha.includes("T")) {
+
+            const fechaObj = new Date(fecha);
+
+            if (!isNaN(fechaObj)) {
+
+                fecha =
+                    String(fechaObj.getDate()).padStart(2, "0") +
+                    "/" +
+                    String(fechaObj.getMonth() + 1).padStart(2, "0") +
+                    "/" +
+                    fechaObj.getFullYear();
+
+            }
+
+        }
+
+
+        /* ================================
+           FORMATO DE PUNTAJE
+        ================================= */
+
+        let puntaje = e.puntaje;
+
+        if (
+            puntaje !== "" &&
+            puntaje !== null &&
+            !isNaN(puntaje)
+        ) {
+
+            puntaje =
+                Math.round(Number(puntaje) * 100) + "%";
+
+        }
+
+
         html += `
 
             <tr>
 
-                <td>${e.fecha}</td>
+                <td>${fecha}</td>
 
                 <td>${e.asociado}</td>
 
@@ -1590,7 +1632,7 @@ function callbackHistorial(data) {
 
                 <td>
                     <strong>
-                        ${e.puntaje}
+                        ${puntaje}
                     </strong>
                 </td>
 
@@ -1618,7 +1660,6 @@ function callbackHistorial(data) {
         .innerHTML = html;
 
 }
-
 
 /* =========================================
    VOLVER
