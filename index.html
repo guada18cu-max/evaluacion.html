@@ -2527,7 +2527,137 @@ function callbackDashboard(data) {
         Math.round(
             porcentajeSatisfactorio
         ) + "%";
+/* =========================================
+   RESULTADOS POR LOCAL
+========================================= */
 
+const locales = {};
+
+evaluaciones.forEach(e => {
+
+    const local = e.local || "Sin local";
+
+    if (!locales[local]) {
+
+        locales[local] = {
+            evaluaciones: 0,
+            sumaPuntajes: 0,
+            satisfactorias: 0
+        };
+
+    }
+
+    let puntaje =
+        Number(
+            String(e.puntaje)
+                .replace("%", "")
+        );
+
+    if (isNaN(puntaje)) {
+        puntaje = 0;
+    }
+
+    locales[local].evaluaciones++;
+
+    locales[local].sumaPuntajes +=
+        puntaje;
+
+    if (puntaje >= 80) {
+
+        locales[local].satisfactorias++;
+
+    }
+
+});
+
+
+let htmlLocales = `
+
+    <table class="history-table">
+
+        <thead>
+
+            <tr>
+
+                <th>Local</th>
+
+                <th>Evaluaciones</th>
+
+                <th>Promedio</th>
+
+                <th>Satisfactorio o superior</th>
+
+            </tr>
+
+        </thead>
+
+        <tbody>
+
+`;
+
+
+Object.keys(locales).forEach(local => {
+
+    const datos = locales[local];
+
+    const promedioLocal =
+        datos.sumaPuntajes /
+        datos.evaluaciones;
+
+    const porcentajeSatisfactorioLocal =
+        (
+            datos.satisfactorias /
+            datos.evaluaciones
+        ) * 100;
+
+
+    htmlLocales += `
+
+        <tr>
+
+            <td>
+                <strong>
+                    ${local}
+                </strong>
+            </td>
+
+            <td>
+                ${datos.evaluaciones}
+            </td>
+
+            <td>
+                <strong>
+                    ${Math.round(promedioLocal)}%
+                </strong>
+            </td>
+
+            <td>
+                ${Math.round(
+                    porcentajeSatisfactorioLocal
+                )}%
+            </td>
+
+        </tr>
+
+    `;
+
+});
+
+
+htmlLocales += `
+
+        </tbody>
+
+    </table>
+
+`;
+
+
+document.getElementById(
+    "resultadosLocales"
+)
+    .innerHTML =
+    htmlLocales;
 }
 
 
