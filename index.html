@@ -3610,7 +3610,7 @@ function renderizarResumenAsociado(registros) {
     });
     let html = '<h3 style="margin-top:10px">👤 '+escaparResumen(registros[0].asociado)+'</h3>';
     html += '<div style="display:flex;flex-wrap:wrap;gap:12px;margin:18px 0">';
-    [['Evaluaciones',registros.length],['Promedio',promedio],['Satisfactorias (≥80%)',satisfactorias]].forEach(([titulo,valor]) => {
+    [['Evaluaciones',registros.length],['Promedio',promedio],['Satisfactorias (80% o más)',satisfactorias]].forEach(([titulo,valor]) => {
         html += '<div style="flex:1;min-width:125px;padding:15px;background:#f7f7f7;border-radius:10px;text-align:center"><strong style="font-size:24px">'+valor+'</strong><div>'+titulo+'</div></div>';
     });
     html += '</div><h3>📋 Historial individual</h3><div style="overflow-x:auto"><table class="history-table"><thead><tr><th>Fecha</th><th>Local</th><th>Puesto</th><th>Categoría</th><th>Correctas</th><th>Incorrectas</th><th>Puntaje</th><th>Nivel</th></tr></thead><tbody>';
