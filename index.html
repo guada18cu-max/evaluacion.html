@@ -3077,25 +3077,101 @@ function callbackDashboard(data) {
         htmlCategorias;
 
 
-    /*
-       Por ahora dejamos la sección de
-       conocimientos a reforzar como estaba.
-       La trabajaremos después con el detalle
-       de preguntas incorrectas.
-    */
+    /* =========================================
+       PRINCIPALES CONOCIMIENTOS A REFORZAR
+       Se identifican las preguntas marcadas como
+       [Incorrecta] en el detalle de cada evaluación.
+    ========================================= */
 
-    document.getElementById(
-        "conocimientosReforzar"
-    )
-        .innerHTML = `
+    const erroresPorPregunta = {};
 
+    evaluaciones.forEach(e => {
+
+        const detalle = String(e.detalle || "");
+        if (!detalle.trim()) return;
+
+        const regexIncorrectas = /(?:^|\|\s*)\d+\.\s*\[Incorrecta\]\s*(.*?)\s*-\s*(.*?)(?=\s*\|\s*\d+\.\s*\[|$)/gi;
+        let coincidencia;
+
+        while ((coincidencia = regexIncorrectas.exec(detalle)) !== null) {
+
+            const categoria = String(coincidencia[1] || "Sin categoría").trim();
+            const pregunta = String(coincidencia[2] || "").trim();
+            if (!pregunta) continue;
+
+            const clave = (categoria + "|||" + pregunta).toLocaleLowerCase();
+
+            if (!erroresPorPregunta[clave]) {
+                erroresPorPregunta[clave] = {
+                    categoria: categoria,
+                    pregunta: pregunta,
+                    errores: 0
+                };
+            }
+
+            erroresPorPregunta[clave].errores++;
+        }
+
+    });
+
+    const preguntasReforzar = Object.values(erroresPorPregunta)
+        .sort((a, b) => b.errores - a.errores || a.pregunta.localeCompare(b.pregunta, "es"))
+        .slice(0, 5);
+
+    const escaparHTML = texto => String(texto)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#39;");
+
+    let htmlReforzar = "";
+
+    if (preguntasReforzar.length === 0) {
+
+        htmlReforzar = `
             <div class="empty">
-
-                Los resultados aparecerán aquí.
-
+                Aún no hay suficientes evaluaciones con detalle de respuestas incorrectas para identificar conocimientos a reforzar.
             </div>
-
         `;
+
+    } else {
+
+        htmlReforzar = `
+            <p style="margin-top:0; color:#666;">
+                Preguntas incorrectas más frecuentes según el historial de evaluaciones:
+            </p>
+            <table class="history-table">
+                <thead>
+                    <tr>
+                        <th>Categoría</th>
+                        <th>Conocimiento a reforzar</th>
+                        <th>Errores registrados</th>
+                        <th>Recomendación</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${preguntasReforzar.map(item => {
+                        const recomendacion = item.categoria.toLocaleLowerCase().includes("gerencial")
+                            ? "Repasar el procedimiento y los criterios de gestión relacionados con esta pregunta."
+                            : "Reforzar la explicación y la práctica del procedimiento relacionado con esta pregunta.";
+
+                        return `
+                            <tr>
+                                <td>${escaparHTML(item.categoria)}</td>
+                                <td>${escaparHTML(item.pregunta)}</td>
+                                <td><strong>${item.errores}</strong></td>
+                                <td>${recomendacion}</td>
+                            </tr>
+                        `;
+                    }).join("")}
+                </tbody>
+            </table>
+        `;
+
+    }
+
+    document.getElementById("conocimientosReforzar").innerHTML = htmlReforzar;
 
 }
 
