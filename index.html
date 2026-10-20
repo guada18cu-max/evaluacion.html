@@ -951,6 +951,10 @@ button:hover {
 
         </button>
 
+        <button class="btn-secondary" onclick="mostrarResumenAsociado()">
+            🔎 Resumen de Asociado
+        </button>
+
 
     </div>
 
@@ -1426,6 +1430,14 @@ button:hover {
 
 </div>
 
+<div id="resumenAsociado" class="card hidden">
+    <h2>🔎 Resumen de Asociado</h2>
+    <p style="text-align:center;margin-bottom:20px;">Consultá el historial individual y los conocimientos que necesitan refuerzo.</p>
+    <label for="busquedaAsociado">Nombre del asociado</label>
+    <input id="busquedaAsociado" type="search" placeholder="Escribí el nombre del asociado..." oninput="buscarResumenAsociado()" style="width:100%;padding:12px;margin:12px 0 18px;border:1px solid #ddd;border-radius:8px;box-sizing:border-box;">
+    <div id="contenidoResumenAsociado" aria-live="polite"><div class="empty">Escribí un nombre para consultar sus evaluaciones.</div></div>
+    <div class="buttons"><button class="btn-secondary" onclick="volverDesdeResumen()">← Volver</button></div>
+</div>
 
 </div>
 
@@ -3515,6 +3527,104 @@ function volverInicioDashboard() {
 }
 
 
+
+/* =========================================
+   RESUMEN INDIVIDUAL DEL ASOCIADO
+========================================= */
+let registrosResumenAsociado = [];
+let resumenAsociadoCargado = false;
+
+function escaparResumen(valor) {
+    return String(valor == null ? "" : valor).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]));
+}
+function normalizarNombre(valor) {
+    return String(valor || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLocaleLowerCase().trim().replace(/\s+/g," ");
+}
+function mostrarResumenAsociado() {
+    ["inicio","evaluacion","resultado","dashboard","historial"].forEach(id => document.getElementById(id).classList.add("hidden"));
+    document.getElementById("resumenAsociado").classList.remove("hidden");
+    if (!resumenAsociadoCargado) {
+        document.getElementById("contenidoResumenAsociado").innerHTML = '<div class="loading">Cargando evaluaciones...</div>';
+        const script = document.createElement("script");
+        script.src = URL_SCRIPT + "?accion=historial&callback=callbackResumenAsociado";
+        script.onerror = () => { document.getElementById("contenidoResumenAsociado").innerHTML = '<div class="empty">No se pudo conectar con el historial. Intentá nuevamente.</div>'; };
+        document.body.appendChild(script);
+    } else buscarResumenAsociado();
+    document.getElementById("busquedaAsociado").focus();
+}
+function callbackResumenAsociado(data) {
+    if (!data || !data.success) {
+        document.getElementById("contenidoResumenAsociado").innerHTML = '<div class="empty">No se pudo cargar el historial.</div>';
+        return;
+    }
+    registrosResumenAsociado = (data.evaluaciones || []).filter(esEvaluacionValida);
+    resumenAsociadoCargado = true;
+    buscarResumenAsociado();
+}
+function fechaResumen(valor) {
+    if (!valor) return "—";
+    const texto = String(valor);
+    if (!texto.includes("T")) return escaparResumen(texto);
+    const fecha = new Date(texto);
+    return isNaN(fecha) ? escaparResumen(texto) : fecha.toLocaleDateString("es-PY");
+}
+function buscarResumenAsociado() {
+    const nombre = normalizarNombre(document.getElementById("busquedaAsociado").value);
+    const destino = document.getElementById("contenidoResumenAsociado");
+    if (!nombre) { destino.innerHTML = '<div class="empty">Escribí un nombre para consultar sus evaluaciones.</div>'; return; }
+    const coincidencias = registrosResumenAsociado.filter(e => normalizarNombre(e.asociado).includes(nombre));
+    if (!coincidencias.length) { destino.innerHTML = '<div class="empty">No encontramos evaluaciones para ese nombre.</div>'; return; }
+    const nombres = [...new Set(coincidencias.map(e => String(e.asociado).trim()))];
+    if (new Set(coincidencias.map(e => normalizarNombre(e.asociado))).size > 1) {
+        destino.innerHTML = '<p>Seleccioná un asociado:</p>' + nombres.map(n => '<button class="btn-secondary" style="margin:5px" onclick="seleccionarAsociadoResumen(decodeURIComponent(\''+encodeURIComponent(n)+'\'))">'+escaparResumen(n)+'</button>').join("");
+        return;
+    }
+    renderizarResumenAsociado(coincidencias);
+}
+function seleccionarAsociadoResumen(nombre) {
+    document.getElementById("busquedaAsociado").value = nombre;
+    buscarResumenAsociado();
+}
+function renderizarResumenAsociado(registros) {
+    const destino = document.getElementById("contenidoResumenAsociado");
+    const puntajes = registros.map(e => convertirPuntaje(e.puntaje)).filter(n => Number.isFinite(n));
+    const promedio = puntajes.length ? Math.round(puntajes.reduce((a,b) => a+b,0)/puntajes.length) + "%" : "—";
+    const satisfactorias = puntajes.filter(n => n >= 80).length;
+    const errores = new Map();
+    registros.forEach(e => {
+        const detalle = String(e.detalle || "");
+        detalle.split(/\s*\|\s*/).forEach(fragmento => {
+            const match = fragmento.match(/^\s*\d+\.\s*\[Incorrecta\]\s*(.*?)\s*$/i);
+            if (!match) return;
+            const texto = match[1].trim();
+            if (!texto) return;
+            const clave = normalizarNombre(texto);
+            const actual = errores.get(clave) || {texto, cantidad:0};
+            actual.cantidad++;
+            errores.set(clave,actual);
+        });
+    });
+    const ordenados = [...registros].sort((a,b) => {
+        const fa = Date.parse(a.fecha), fb = Date.parse(b.fecha);
+        return (Number.isFinite(fb)?fb:0)-(Number.isFinite(fa)?fa:0);
+    });
+    let html = '<h3 style="margin-top:10px">👤 '+escaparResumen(registros[0].asociado)+'</h3>';
+    html += '<div style="display:flex;flex-wrap:wrap;gap:12px;margin:18px 0">';
+    [['Evaluaciones',registros.length],['Promedio',promedio],['Satisfactorias (≥80%)',satisfactorias]].forEach(([titulo,valor]) => {
+        html += '<div style="flex:1;min-width:125px;padding:15px;background:#f7f7f7;border-radius:10px;text-align:center"><strong style="font-size:24px">'+valor+'</strong><div>'+titulo+'</div></div>';
+    });
+    html += '</div><h3>📋 Historial individual</h3><div style="overflow-x:auto"><table class="history-table"><thead><tr><th>Fecha</th><th>Local</th><th>Puesto</th><th>Categoría</th><th>Correctas</th><th>Incorrectas</th><th>Puntaje</th><th>Nivel</th></tr></thead><tbody>';
+    ordenados.forEach(e => { const p = convertirPuntaje(e.puntaje); html += '<tr>'+[fechaResumen(e.fecha),escaparResumen(e.local),escaparResumen(e.puesto),escaparResumen(e.categoria),escaparResumen(e.correctas),escaparResumen(e.incorrectas),Number.isFinite(p)?Math.round(p)+'%':'—',escaparResumen(e.nivel)].map(v => '<td>'+v+'</td>').join('')+'</tr>'; });
+    html += '</tbody></table></div><h3 style="margin-top:25px">🚨 Conocimientos a reforzar</h3>';
+    const lista = [...errores.values()].sort((a,b)=>b.cantidad-a.cantidad);
+    if (!lista.length) html += '<p>No hay respuestas incorrectas detalladas en los registros disponibles.</p>';
+    else { html += '<p>Priorizá el repaso de los procedimientos asociados a estas preguntas:</p><ol>'; lista.slice(0,10).forEach(item => {html += '<li style="margin-bottom:10px">'+escaparResumen(item.texto)+' <strong>('+item.cantidad+' '+(item.cantidad===1?'error':'errores')+')</strong></li>';}); html += '</ol>'; }
+    destino.innerHTML = html;
+}
+function volverDesdeResumen() {
+    document.getElementById("resumenAsociado").classList.add("hidden");
+    document.getElementById("inicio").classList.remove("hidden");
+}
 
 /* =========================================
    INICIAR
