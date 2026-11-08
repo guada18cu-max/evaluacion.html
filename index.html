@@ -830,16 +830,24 @@ button:hover {
         </div>
 
 
+<div class="form-group">
+<label for="fechaIngreso">Fecha de ingreso del asociado</label>
+<input type="date" id="fechaIngreso" required>
+</div>
+
         <div class="form-group">
 
             <label>
                 Local
             </label>
 
-            <input
-                type="text"
-                id="local"
-                placeholder="Ej.: Mburucuya">
+            <select id="local" required>
+<option value="">Seleccione un local</option>
+<option value="Popeyes Luque">Popeyes Luque</option>
+<option value="Popeyes Mburucuya">Popeyes Mburucuya</option>
+<option value="Popeyes Sanber">Popeyes Sanber</option>
+<option value="Popeyes Galería">Popeyes Galería</option>
+</select>
 
         </div>
 
@@ -1566,6 +1574,8 @@ function esEvaluacionValida(e) {
         .toLowerCase();
 
 
+    const fechaIngreso = document.getElementById("fechaIngreso").value;
+
     const local =
         String(
             e.local || ""
@@ -1770,6 +1780,7 @@ function iniciarEvaluacion() {
 
     if (
         !asociado ||
+        !fechaIngreso ||
         !local ||
         !puesto ||
         !evaluador ||
@@ -1831,6 +1842,7 @@ function iniciarEvaluacion() {
     datosEvaluacion = {
 
         asociado,
+        fechaIngreso,
         local,
         puesto,
         evaluador,
@@ -2280,6 +2292,9 @@ function guardarEvaluacion(
 
         asociado:
             datosEvaluacion.asociado,
+
+        fechaIngreso:
+            datosEvaluacion.fechaIngreso,
 
 
         local:
@@ -3564,6 +3579,7 @@ function callbackResumenAsociado(data) {
 function fechaResumen(valor) {
     if (!valor) return "—";
     const texto = String(valor);
+    if (/^\d{4}-\d{2}-\d{2}$/.test(texto)) { const [a,m,d] = texto.split("-"); return d+"/"+m+"/"+a; }
     if (!texto.includes("T")) return escaparResumen(texto);
     const fecha = new Date(texto);
     return isNaN(fecha) ? escaparResumen(texto) : fecha.toLocaleDateString("es-PY");
@@ -3613,8 +3629,10 @@ function renderizarResumenAsociado(registros) {
     [['Evaluaciones',registros.length],['Promedio',promedio],['Satisfactorias (80% o más)',satisfactorias]].forEach(([titulo,valor]) => {
         html += '<div style="flex:1;min-width:125px;padding:15px;background:#f7f7f7;border-radius:10px;text-align:center"><strong style="font-size:24px">'+valor+'</strong><div>'+titulo+'</div></div>';
     });
-    html += '</div><h3>📋 Historial individual</h3><div style="overflow-x:auto"><table class="history-table"><thead><tr><th>Fecha</th><th>Local</th><th>Puesto</th><th>Categoría</th><th>Correctas</th><th>Incorrectas</th><th>Puntaje</th><th>Nivel</th></tr></thead><tbody>';
-    ordenados.forEach(e => { const p = convertirPuntaje(e.puntaje); html += '<tr>'+[fechaResumen(e.fecha),escaparResumen(e.local),escaparResumen(e.puesto),escaparResumen(e.categoria),escaparResumen(e.correctas),escaparResumen(e.incorrectas),Number.isFinite(p)?Math.round(p)+'%':'—',escaparResumen(e.nivel)].map(v => '<td>'+v+'</td>').join('')+'</tr>'; });
+    const ingresos = registros.map(e => String(e.fechaIngreso || '').trim()).filter(Boolean);
+    html += '</div><p><strong>Fecha de ingreso:</strong> '+(ingresos.length ? fechaResumen(ingresos[0]) : 'No registrada')+'</p>';
+    html += '<h3>📋 Historial individual</h3><div style="overflow-x:auto"><table class="history-table"><thead><tr><th>Fecha</th><th>Fecha de ingreso</th><th>Local</th><th>Puesto</th><th>Categoría</th><th>Correctas</th><th>Incorrectas</th><th>Puntaje</th><th>Nivel</th></tr></thead><tbody>';
+    ordenados.forEach(e => { const p = convertirPuntaje(e.puntaje); html += '<tr>'+[fechaResumen(e.fecha),fechaResumen(e.fechaIngreso),escaparResumen(e.local),escaparResumen(e.puesto),escaparResumen(e.categoria),escaparResumen(e.correctas),escaparResumen(e.incorrectas),Number.isFinite(p)?Math.round(p)+'%':'—',escaparResumen(e.nivel)].map(v => '<td>'+v+'</td>').join('')+'</tr>'; });
     html += '</tbody></table></div><h3 style="margin-top:25px">🚨 Conocimientos a reforzar</h3>';
     const lista = [...errores.values()].sort((a,b)=>b.cantidad-a.cantidad);
     if (!lista.length) html += '<p>No hay respuestas incorrectas detalladas en los registros disponibles.</p>';
